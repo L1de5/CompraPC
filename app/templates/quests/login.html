@@ -1,0 +1,20 @@
+{% extends 'app/templates/layout/layout.html' %}
+
+{% block tittle %} Formulario {% endblock %}
+
+{% block body %}
+
+<form action="/home/login" method="post">
+    {{ form.csrf_token }}
+    E-mail:
+    <br>
+    {{ form.email(size=35)}}
+    <br>
+    Senha:
+    <br>
+    {{ form.senha(size=35)}}
+    <br>
+    {{ form.submit}}
+</form>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'app/templates/layout/layout.html' %}
+
+{% block tittle %} Formulario {% endblock %}
+
+{% block body %}
+
+<form action="/home/clientes" method="post">
+    {{ form.csrf_token }}
+    {{ form.id(hidden=True)}}
+    Nome:
+    <br>
+    {{ form.nome(size=35)}}
+    <br>
+    E-mail:
+    <br>
+    {{ form.email(size=35)}}
+    <br>
+    Senha:
+    <br>
+    {{ form.senha(size=35)}}
+    <br>
+    Endereco:
+    <br>
+    {{ form.endereco(size=35)}}
+    <br>
+    cpf:
+    <br>
+    {{ form.cpf(size=35)}}
+    <br>
+    Data de Nascimento:
+    <br>
+    {{ form.dataNasc(size=35)}}
+    <br>
+    {{ form.submit}}
+    <br>
+</form>
+
+{% endblock %}

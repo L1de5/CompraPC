@@ -1,0 +1,30 @@
+{% extends 'app/templates/layout/layout.html' %}
+
+{% block tittle %} Formulario {% endblock %}
+
+{% block body %}
+
+<form action="/home/produtos" method="post">
+    {{ form.csrf_token }}
+    {{ form.id(hidden=True)}}
+    Nome:
+    <br>
+    {{ form.nome(size=35)}}
+    <br>
+    Descrição:
+    <br>
+    {{ form.descricao(cols="51", rows="5")}}
+    <br>
+    Preço:
+    <br>
+    {{ form.preco(size=35)}}
+    <br>
+    Quantidade:
+    <br>
+    {{ form.quantidade(size=35)}}
+    <br>
+    {{ form.submit}}
+    <br>
+</form>
+
+{% endblock %}
