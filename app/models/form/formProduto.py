@@ -1,14 +1,13 @@
 from flask_wtf import Form, csrf
-from wtforms import StringField, SubmitField, IntegerField, FloatField
+from wtforms import StringField, SubmitField, IntegerField, FloatField, PasswordField, DateField
 from wtforms_components import EmailField
-from wtforms.widgets import TextArea
 
-
-
-class Produtos(Form):
+class Clientes(Form):
     id = IntegerField('id')
     nome = StringField('nome')
-    descricao = StringField('descricao', widget=TextArea())
-    preco = IntegerField('preco')
-    quantidade = IntegerField('quantidade')
+    email = StringField('email')
+    senha = PasswordField('senha')
+    endereco = StringField('endereco')
+    cpf = StringField('cpf')
+    dataNasc = DateField('dataNasc', format='%DD/%MM/%YY')
     submit = SubmitField('enviar')

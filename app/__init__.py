@@ -1,5 +1,11 @@
+# -*- coding: utf-8 -*-
+__version__ = '0.1'
+from flask import Flask
+from app.ext import database, login
 
-from flask_sqlalchemy import SQLAlchemy
+app = Flask('app')
+app.config.from_pyfile('../config.cfg')
+database.configure(app)
+login.configure(app)
 
-db = SQLAlchemy()
-
+from app.controllers import *

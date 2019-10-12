@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from app import db
 
-
 class Venda(db.Model): 
     __tablename__ = 'venda'
     id = db.Column(db.Integer, primary_key=True)

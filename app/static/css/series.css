@@ -1,0 +1,43 @@
+#titulo {
+    width: 100%;
+    margin-bottom: 1.5em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#titulo h1 {
+    display: block;
+    padding: 0 1em;
+    font-size: 2em;
+}
+
+#titulo div button {
+    font-weight: 700;
+    background-color: rgba(58, 1, 40, 0.781);
+    color: white;
+    border: none;
+}
+
+#titulo div a {
+    font-weight: 700;
+    background-color: rgba(58, 1, 40, 0.781);
+    color: white;
+    border: none;
+}
+
+#series {
+    margin-bottom: 2em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.serie {
+    margin: .3em;
+}
+
+#foto {
+    color: white;
+    border-radius: 5px;
+}
