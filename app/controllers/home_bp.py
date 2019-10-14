@@ -2,7 +2,10 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
+from app.models.form.produtos import ProdutoForm
 from app.models.banco.Cliente import Cliente
+from app.models.banco.produto import Produto
+from app.models.banco.Venda import Venda
 from app.ext.database import db
 from app.ext.login import login_mananger
 from flask_login import login_user, login_required, logout_user, current_user
@@ -25,7 +28,7 @@ def login():
             if cliente.senha == senha.hexdigest():
                 login_user(cliente)
 
-                return redirect('/home/cadastro')
+                return redirect('/home/produto')
             else:
                 flash(u'Senha inválida!', 'danger')
         else:
@@ -47,18 +50,42 @@ def cadastro():
         print(form.dataNasc.data)
         cliente = Cliente(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = dataNasc)
 
-        # try:
-        db.session.add(cliente)
-        db.session.commit()
+        try:
+            db.session.add(cliente)
+            db.session.commit()
             #login_usuario(new_user) Explica ai
 
-        return redirect('/home/')
-        # except exc.SQLAlchemyError:
-            # flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
+            return redirect('/home/')
+        except exc.SQLAlchemyError:
+            flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
 
-            # return render_template('index.html', form=form, titulo='Cadastrar')
+            return render_template('index.html', form=form, titulo='Cadastrar')
 
     return render_template('index.html', form=form, titulo='Cadastrar')
+
+@home_bp.route('/produto', methods=['GET', 'POST'])
+def produto():
+    form = ProdutoForm()
+
+    if request.method == "POST":
+        nome = form.nome.data
+        descricao = form.descricao.data
+        preco = form.preco.data
+        quantidade = form.quantidade.data
+        produto = Produto(nome = nome, descricao = descricao, preco = preco, quantidade = quantidade)
+
+        try:
+            db.session.add(produto)
+            db.session.commit()
+            #login_usuario(new_user) Explica ai
+
+            return redirect('/home/')
+        except exc.SQLAlchemyError:
+            flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
+
+            return render_template('index.html', form=form, titulo='Cadastrar')
+
+    return render_template('index.html', form=form, titulo='Produto')
 
 @home_bp.route('/logout')
 @login_required

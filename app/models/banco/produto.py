@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from app.models.banco.venda import Venda
-from app import db
+from app.models.banco.Venda import Venda
+from app.ext.database import db
 
 venda_produto = db.Table('venda_produto', db.Column('id_venda',db.Integer, db.ForeignKey('venda.id'), primary_key=True),db.Column('id_produto', db.Integer, db.ForeignKey('produto.id'), primary_key=True))
 
