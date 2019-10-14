@@ -10,5 +10,6 @@ database.configure(app)
 login.configure(app)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
 from app.controllers import *

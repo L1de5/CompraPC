@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+from app import app
 from flask import render_template, request, Blueprint, redirect, url_for, flash
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
@@ -9,10 +11,14 @@ from app.models.banco.Venda import Venda
 from app.ext.database import db
 from app.ext.login import login_mananger
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
 from hashlib import md5
 from sqlalchemy import exc
 
 home_bp = Blueprint('home', __name__, url_prefix='/home')
+
+def permitido(name): 
+    return'.'in name and name.split('.')[-1].lower() in ['zip', 'png', 'pdf', 'txt', 'jpg', 'jpeg']
 
 @home_bp.route('/', methods=['GET', 'POST'])
 def login():
@@ -72,20 +78,38 @@ def produto():
         descricao = form.descricao.data
         preco = form.preco.data
         quantidade = form.quantidade.data
-        produto = Produto(nome = nome, descricao = descricao, preco = preco, quantidade = quantidade)
+        arquivo = form.arquivo.data
+        if arquivo and permitido(arquivo.filename):
+            foto = secure_filename(arquivo.filename)
+            arquivo.save(os.path.join('app', app.config['UPLOAD_FOLDER'], foto))
+            diretorio = os.path.join('app', app.config['UPLOAD_FOLDER'], foto)
+        produto = Produto(nome = nome, descricao = descricao, preco = preco, quantidade = quantidade, arquivo = diretorio)
 
         try:
             db.session.add(produto)
             db.session.commit()
-            #login_usuario(new_user) Explica ai
+         #login_usuario(new_user) Explica ai
 
-            return redirect('/home/')
+            return redirect('/home/listarP')
         except exc.SQLAlchemyError:
             flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
 
             return render_template('index.html', form=form, titulo='Cadastrar')
 
     return render_template('index.html', form=form, titulo='Produto')
+@home_bp.route('/listarP')
+def listarP():
+    lista = Produto.query.all()
+    print(lista)
+    return render_template('buscas/listarp.html', func=lista)
+
+@home_bp.route('/excluirP/<id>', methods = ['GET', 'POST'])
+def excluirP(id):
+    p = Produto.query.get(id)
+    db.session.delete(p)
+    db.session.commit()
+    return redirect('/home/listarP')
+
 
 @home_bp.route('/logout')
 @login_required

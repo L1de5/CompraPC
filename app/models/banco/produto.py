@@ -11,6 +11,7 @@ class Produto(db.Model):
     descricao = db.Column(db.String(200), nullable=False)
     preco = db.Column(db.Integer, nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
+    arquivo = db.Column(db.String(400), nullable=False)
     vendas = db.relationship('Venda', secondary=venda_produto, backref='produto')
 
 

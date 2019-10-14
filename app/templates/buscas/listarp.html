@@ -1,4 +1,4 @@
-{% extends 'app/templates/layout/layout.html' %}
+{% extends 'layout/layout.html' %}
 
 {% block tittle %} Lista {% endblock %}
 
@@ -13,7 +13,8 @@
         Descrição: {{ lista.descricao }}</br>
         Preço: {{ lista.preco }}</br>
         Quantidade: {{ lista.quantidade }}</br>
-        
+        Diretorio: {{ lista.arquivo }}<br>
+        <a href="/home/excluirP/{{lista.id}}">Excluir</a>
         
     {% endfor %}
     <h4>------------------------------------------------</h4>
