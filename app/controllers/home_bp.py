@@ -13,6 +13,7 @@ home_bp = Blueprint('home', __name__, url_prefix='/home')
 
 @home_bp.route('/', methods=['GET', 'POST'])
 def login():
+    db.create_all()
     form = LoginForm()
     
     if form.validate_on_submit():
@@ -24,7 +25,7 @@ def login():
             if cliente.senha == senha.hexdigest():
                 login_user(cliente)
 
-                return 'aeeeee'
+                return redirect('/home/cadastro')
             else:
                 flash(u'Senha inválida!', 'danger')
         else:
@@ -36,25 +37,26 @@ def login():
 def cadastro():
     form = CadastroForm()
 
-    if form.validate_on_submit():
-        username = form.username.data
-        login = form.login.data
+    if request.method == "POST":
+        nome = form.nome.data
         email = form.email.data
-        password = form.password.data
-        idade = form.idade.data
-        altura = form.altura.data
-        new_user = User(nome = username, login = login, email = email, senha = password, idade = idade, altura = altura)
+        senha = md5((form.senha.data).encode())
+        endereco = form.endereco.data
+        cpf = form.cpf.data
+        dataNasc = '05/02/00'
+        print(form.dataNasc.data)
+        cliente = Cliente(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = dataNasc)
 
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user)
+        # try:
+        db.session.add(cliente)
+        db.session.commit()
+            #login_usuario(new_user) Explica ai
 
-            return redirect('/series')
-        except exc.SQLAlchemyError:
-            flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
+        return redirect('/home/')
+        # except exc.SQLAlchemyError:
+            # flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
 
-            return render_template('index.html', form=form, titulo='Cadastrar')
+            # return render_template('index.html', form=form, titulo='Cadastrar')
 
     return render_template('index.html', form=form, titulo='Cadastrar')
 

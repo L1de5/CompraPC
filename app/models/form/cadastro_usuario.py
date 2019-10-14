@@ -8,5 +8,5 @@ class CadastroForm(Form):
     senha = PasswordField('Senha', validators=[DataRequired(), Length(min = 3, max = 80)])
     endereco = StringField('Endereço', validators=[DataRequired(), Length(min = 3, max = 240)])
     cpf = StringField('CPF', validators=[DataRequired(), Length(min = 11, max = 11)])
-    data_nasc = DateField('Data de Nascimento', format='%DD/%MM/%YY', validators=[DataRequired()])
+    dataNasc = DateField('Data de Nascimento', format='%DD/%MM/%YY', validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
