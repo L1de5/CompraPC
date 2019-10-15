@@ -18,12 +18,14 @@ produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
 def permitido(name): 
     return'.'in name and name.split('.')[-1].lower() in ['png', 'jpg', 'jpeg']
 
-
 @produtos_bp.route('/')
 def listar():
+    form_cadastro = CadastroForm()
+    form_login = LoginForm()
+
     produtos = Produto.query.all()
     print(produtos)
-    return render_template('buscas/listarp.html', produtos = produtos)
+    return render_template('buscas/listarp.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login)
 
 @produtos_bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required

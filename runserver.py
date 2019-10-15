@@ -11,8 +11,6 @@ from app.ext.database import db
 app.register_blueprint(usuario_bp)
 app.register_blueprint(produtos_bp)
 
-
-
 @app.route('/')
 def index():
     return redirect(produtos_bp.url_prefix)

@@ -35,30 +35,27 @@ def login():
 
 @usuario_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
-    form = CadastroForm()
-
     if request.method == "POST":
         nome = form.nome.data
         email = form.email.data
         senha = md5((form.senha.data).encode())
+        conf_senha = md5((form.conf_senha.data).encode())
         endereco = form.endereco.data
         cpf = form.cpf.data
-        dataNasc = '05/02/00'
-        print(form.dataNasc.data)
-        cliente = Cliente(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = dataNasc)
+        data_nasc = form.data_nasc.data
 
-        try:
-            db.session.add(cliente)
-            db.session.commit()
-            #login_usuario(new_user) Explica ai
+        if senha.hexdigest() == conf_senha.hexdigest():
+            try:
+                new_cliente = Cliente(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
+                db.session.add(new_cliente)
+                db.session.commit()
+                login_usuario(new_cliente)
+            except exc.SQLAlchemyError:
+                flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
+        else:
+            flash(u'Ocorreu um problema ao tentar cadastrar usuário, as senhas não coincidem!', 'danger')
 
-            return redirect('/produtos')
-        except exc.SQLAlchemyError:
-            flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
-
-            return render_template('index.html', form=form, titulo='Cadastrar')
-
-    return render_template('index.html', form=form, titulo='Cadastrar')
+    return redirect('/produtos')
 
 @usuario_bp.route('/logout')
 @login_required
