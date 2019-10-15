@@ -51,11 +51,11 @@ def produto():
             db.session.commit()
          #login_usuario(new_user) Explica ai
 
-            return redirect('/home/listarP')
+            return redirect('/produto')
         except exc.SQLAlchemyError:
             flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
 
-            return render_template('index.html', form=form, titulo='Cadastrar')
+            return render_template('/produto')
 
     return render_template('index.html', form=form, titulo='Produto')
 

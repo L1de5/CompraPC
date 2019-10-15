@@ -10,6 +10,22 @@
 {% endblock %}
 
 {% block body %}
+    {% for lista in produtos %}
+
+    <h4>------------------------------------------------</h4>
+
+        ID: {{ lista.id }}</br>
+        Nome do Produto: {{ lista.nome }}</br>
+        Descrição: {{ lista.descricao }}</br>
+        Preço: {{ lista.preco }}</br>
+        Quantidade: {{ lista.quantidade }}</br>
+        Diretorio: {{ lista.arquivo }}<br>
+        <a href="/produto/excluir/{{ lista.id }}">Excluir</a>
+        
+    {% endfor %}
+    <h4>------------------------------------------------</h4>
+    </br>
+    <a href="/home/">Voltar</a>
     <nav class="navbar">
         <div>
             <span class="navbar-brand"> CompraPC </span>
@@ -35,9 +51,9 @@
                     <a class="dropdown-item" href="/usuario/logout"> Sair </a>
                 </div>
 
-                <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#addProdutoModal">
+                <a class="btn btn-outline-dark my-2 my-sm-0" href="/produto/adicionar">
                     Adicionar Produto
-                </button>
+                </a>
             </div>
         {% else %}
             <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
@@ -155,7 +171,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="addProdutoModal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <!-- <div class="modal fade" id="addProdutoModal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -165,14 +181,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{ wtf.quick_form(form_add_produto, action='/produto/adicionar', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
+                    {{ wtf.quick_form(form_add_produto, enctype='multipart/form-data',action='/produto/adicionar', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Voltar </button>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
  <!--   <div class="page">
@@ -191,23 +207,9 @@
             {% endif %}
         {% endwith %}
 
-        {% for lista in func %}
-
-        <h4>------------------------------------------------</h4>
-    
-            ID: {{ lista.id }}</br>
-            Nome do Produto: {{ lista.nome }}</br>
-            Descrição: {{ lista.descricao }}</br>
-            Preço: {{ lista.preco }}</br>
-            Quantidade: {{ lista.quantidade }}</br>
-            Diretorio: {{ lista.arquivo }}<br>
-            <a href="/produto/excluir/{{ lista.id }}">Excluir</a>
-            
-        {% endfor %}
-        <h4>------------------------------------------------</h4>
-        </br>
-        <a href="/home/">Voltar</a>
+       
 
         wtf.quick_form(form, button_map={'submit': 'primary'})
     </div> -->
+    
 {% endblock %}
