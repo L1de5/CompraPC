@@ -8,4 +8,4 @@ class ProdutoForm(Form):
     preco = IntegerField('Preço', validators=[DataRequired(), Length(min = 1, max = 80)])
     quantidade = IntegerField('Quantidade', validators=[DataRequired(), Length(min = 0, max = 240)])
     arquivo = FileField('Foto do Produto')
-    submit = SubmitField('Cadastrar')
+    submit = SubmitField('Adicionar')
