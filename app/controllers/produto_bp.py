@@ -22,10 +22,11 @@ def permitido(name):
 def listar():
     form_cadastro = CadastroForm()
     form_login = LoginForm()
+    form_add_produto = ProdutoForm()
 
     produtos = Produto.query.all()
     print(produtos)
-    return render_template('buscas/listarp.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login)
+    return render_template('buscas/listarp.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
 @produtos_bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required

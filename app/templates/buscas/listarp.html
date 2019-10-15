@@ -22,9 +22,28 @@
             </form>
         </div>
 
-        <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
-            Entrar
-        </button>
+        
+        {% if current_user.nome %}
+            <div class="btn-group dropleft">
+                <button class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Menu
+                </button>
+              
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="#"> Carrinho de Compras </a>
+                    <a class="dropdown-item" href="#"> Alterar Informações </a>
+                    <a class="dropdown-item" href="/usuario/logout"> Sair </a>
+                </div>
+
+                <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#addProdutoModal">
+                    Adicionar Produto
+                </button>
+            </div>
+        {% else %}
+            <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
+                Entrar
+            </button>
+        {% endif %}
     </nav>
 
     <div id="produtos">
@@ -104,13 +123,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{ wtf.quick_form(form_login, button_map={'submit': 'outline-dark col-6 offset-3'}) }}
+                    {{ wtf.quick_form(form_login, action='/usuario/login', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Cancelar </button>
 
                     <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#cadastroModal">
-                        cadastrar
+                        Cadastrar
                     </button>
                 </div>
             </div>
@@ -127,7 +146,26 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{ wtf.quick_form(form_cadastro, button_map={'submit': 'outline-dark col-6 offset-3'}) }}
+                    {{ wtf.quick_form(form_cadastro, action='/usuario/cadastro', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Voltar </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addProdutoModal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalCenterTitle"> Cadastrar </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ wtf.quick_form(form_add_produto, action='/usuario/cadastro', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Voltar </button>

@@ -25,7 +25,7 @@ def login():
             if cliente.senha == senha.hexdigest():
                 login_user(cliente)
 
-                return redirect('/produtos')
+                return redirect('/produto')
             else:
                 flash(u'Senha inválida!', 'danger')
         else:
@@ -36,29 +36,29 @@ def login():
 @usuario_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
     if request.method == "POST":
-        nome = form.nome.data
-        email = form.email.data
-        senha = md5((form.senha.data).encode())
-        conf_senha = md5((form.conf_senha.data).encode())
-        endereco = form.endereco.data
-        cpf = form.cpf.data
-        data_nasc = form.data_nasc.data
-
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = md5((request.form['senha']).encode())
+        conf_senha = md5((request.form['conf_senha']).encode())
+        endereco = request.form['endereco']
+        cpf = request.form['cpf']
+        data_nasc = request.form['data_nasc']
+        
         if senha.hexdigest() == conf_senha.hexdigest():
             try:
                 new_cliente = Cliente(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
                 db.session.add(new_cliente)
                 db.session.commit()
-                login_usuario(new_cliente)
+                login_user(new_cliente)
             except exc.SQLAlchemyError:
                 flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
         else:
             flash(u'Ocorreu um problema ao tentar cadastrar usuário, as senhas não coincidem!', 'danger')
 
-    return redirect('/produtos')
+    return redirect('/produto')
 
 @usuario_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect('/produtos')
+    return redirect('/produto')
