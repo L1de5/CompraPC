@@ -1,24 +1,162 @@
-{% extends 'layout/layout.html' %}
+{% extends "layout/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block tittle %} Lista {% endblock %}
+{% block title %}
+    <title> {{ titulo }} </title>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
 
 {% block body %}
+    <nav class="navbar">
+        <div>
+            <span class="navbar-brand"> CompraPC </span>
+        </div>
 
-    {% for lista in func %}
+        <div>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-outline-dark my-2 my-sm-0" type="submit"> Buscar </button>
+            </form>
+        </div>
 
-    <h4>------------------------------------------------</h4>
+        <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
+            Entrar
+        </button>
+    </nav>
 
-        ID: {{ lista.id }}</br>
-        Nome do Produto: {{ lista.nome }}</br>
-        Descrição: {{ lista.descricao }}</br>
-        Preço: {{ lista.preco }}</br>
-        Quantidade: {{ lista.quantidade }}</br>
-        Diretorio: {{ lista.arquivo }}<br>
-        <a href="/home/excluirP/{{lista.id}}">Excluir</a>
-        
-    {% endfor %}
-    <h4>------------------------------------------------</h4>
-    </br>
-    <a href="/home/">Voltar</a>
+    <div id="produtos">
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+               <img src="..." class="card-img-top" alt="...">
+               <div class="card-body">
+                   <h5 class="card-title">Card title</h5>
+                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                   <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+               </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
+            </div>
+        </div>
+    </div>
 
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle"> Entrar </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email address</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            </div>
+                            <button type="submit" class="btn btn-outline-dark col-6 offset-3"> Entrar </button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Cancelar </button>
+                        <button type="button" class="btn btn-outline-dark"> Cadastrar </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ <!--   <div class="page">
+        <h1> Compra PC </h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% for lista in func %}
+
+        <h4>------------------------------------------------</h4>
+    
+            ID: {{ lista.id }}</br>
+            Nome do Produto: {{ lista.nome }}</br>
+            Descrição: {{ lista.descricao }}</br>
+            Preço: {{ lista.preco }}</br>
+            Quantidade: {{ lista.quantidade }}</br>
+            Diretorio: {{ lista.arquivo }}<br>
+            <a href="/produto/excluir/{{ lista.id }}">Excluir</a>
+            
+        {% endfor %}
+        <h4>------------------------------------------------</h4>
+        </br>
+        <a href="/home/">Voltar</a>
+
+        wtf.quick_form(form, button_map={'submit': 'primary'})
+    </div> -->
 {% endblock %}

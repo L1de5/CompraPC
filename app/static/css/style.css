@@ -1,8 +1,52 @@
 body {
     font-family: sans-serif;
-    background-color: rgba(58, 1, 40, 0.781);
-    color: white;
+    background-color: rgba(15, 24, 1, 0.781);
     overflow: hidden;
+}
+
+nav {
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    text-align: justify;
+}
+
+.card {
+    margin: 10px 10px;
+    color: black;
+    width: 17rem !important;
+}
+
+.modal-header {
+    background-color: rgba(15, 24, 1, 0.71);
+    color: white;
+}
+
+.close span {
+    color: white;
+}
+
+#produtos {
+    justify-content: center;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.btn-outline-dark {
+    color: black;
+    border-color: black;
+}
+
+.btn-outline-dark:hover {
+    background-color: rgba(15, 24, 1, 0.781);
+    border-color: #5D8018;
 }
 
 #titulo {
@@ -24,12 +68,3 @@ body {
     padding: 1em;
     height: 100vh;
 }
-
-#submit {
-    background-color: rgba(58, 1, 40, 0.781);
-    border-color: rgba(58, 1, 40, 0.781);
-    width: 100%;
-    font-weight: bold;
-    letter-spacing: .1em;
-}
-
