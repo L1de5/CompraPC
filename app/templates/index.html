@@ -27,7 +27,9 @@
             {% endif %}
         {% endwith %}
 
-        {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
+        <div style="background-color: white; width: 25rem;">
+            {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
+        </div>
     </div>
 
 {% endblock %}

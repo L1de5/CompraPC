@@ -1,0 +1,65 @@
+{% extends "layout/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+    <title> {{ titulo }} </title>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar">
+        <div>
+            <span class="navbar-brand"> CompraPC </span>
+        </div>
+
+        <div>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-outline-dark my-2 my-sm-0" type="submit"> Buscar </button>
+            </form>
+        </div>
+
+        
+        {% if current_user.nome %}
+            <div class="btn-group dropleft">
+                <button class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Menu
+                </button>
+              
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="#"> Carrinho de Compras </a>
+                    <a class="dropdown-item" href="#"> Alterar Informações </a>
+                    <a class="dropdown-item" href="/usuario/logout"> Sair </a>
+                </div>
+
+                <a class="btn btn-outline-dark my-2 my-sm-0" href="/produto/adicionar">
+                    Adicionar Produto
+                </a>
+            </div>
+        {% else %}
+            <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
+                Entrar
+            </button>
+        {% endif %}
+    </nav>
+
+    <div id="produtos">
+        <div class="card" style="width: 50rem;">
+            <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+            <div class="card-body">
+                <h5 class="card-title"> {{ produto.nome }} </h5>
+                <p class="card-text"> {{ produto.descricao }} </p>
+                <p class="card-text"> {{ produto.preco }} </p>
+                <p class="card-text"> {{ produto.quantidade }} </p>
+            </div>
+            <div class="card-body">
+                <a href="/produto/excluir/{{ produto.id }}" class="card-link">Excluir</a>
+            </div>
+        </div>            
+    </div>
+
+
+{% endblock %}

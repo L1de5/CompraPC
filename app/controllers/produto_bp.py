@@ -68,12 +68,20 @@ def produto():
 
     return render_template('index.html', form=form, titulo='Produto')
 
+@produtos_bp.route('/detalhe/<id>', methods = ['GET', 'POST'])
+@login_required
+def detalhe(id):
+    produto = Produto.query.get(id)
+    
+    return render_template('buscas/detalhe.html', produto=produto)
+
+ 
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required
 def excluir(id):
     produto = Produto.query.get(id)
     db.session.delete(produto)
     db.session.commit()
-    return redirect('/home/listarP')
+    return redirect('/produto/')
 
 
