@@ -10,22 +10,6 @@
 {% endblock %}
 
 {% block body %}
-    {% for lista in produtos %}
-
-    <h4>------------------------------------------------</h4>
-
-        ID: {{ lista.id }}</br>
-        Nome do Produto: {{ lista.nome }}</br>
-        Descrição: {{ lista.descricao }}</br>
-        Preço: {{ lista.preco }}</br>
-        Quantidade: {{ lista.quantidade }}</br>
-        Diretorio: {{ lista.arquivo }}<br>
-        <a href="/produto/excluir/{{ lista.id }}">Excluir</a>
-        
-    {% endfor %}
-    <h4>------------------------------------------------</h4>
-    </br>
-    <a href="/home/">Voltar</a>
     <nav class="navbar">
         <div>
             <span class="navbar-brand"> CompraPC </span>
@@ -63,70 +47,21 @@
     </nav>
 
     <div id="produtos">
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-               <img src="..." class="card-img-top" alt="...">
-               <div class="card-body">
-                   <h5 class="card-title">Card title</h5>
-                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                   <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-               </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-outline-dark btn-block">Go somewhere</a>
-            </div>
-        </div>
+        {% if produtos %}
+            {% for produto in produtos %}
+                <div class="card" style="width: 18rem;">
+                    <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{ produto.nome }} </h5>
+                        <p class="card-text"> {{ produto.descricao }} </p>
+                        <a href="/produto/detalhe/{{ produto.id }}" class="btn btn-outline-dark btn-block"> Comprar </a>
+                    </div>
+                </div>            
+            {% endfor %}
+        {% else %}
+            <span> Nenhum produto encontrado </span>
+        {% endif %}
+        
     </div>
 
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
