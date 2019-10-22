@@ -32,6 +32,7 @@ def listar():
 @login_required
 def adicionar():
     form_produto = ProdutoForm()
+    print(form_produto.preco.data)
     
     if form_produto.validate_on_submit():
         nome = form_produto.nome.data
@@ -102,6 +103,7 @@ def editar(id):
                 produto.descricao = request.form['descricao']
                 produto.preco = request.form['preco']
                 produto.quantidade = request.form['quantidade']
+                
                 db.session.commit()
 
                 flash(u'Produto alterado com sucesso!', 'success')
@@ -110,16 +112,17 @@ def editar(id):
             except exc.SQLAlchemyError:
                 flash(u'Ocorreu um problema ao tentar alterar produto, tente novamente!', 'danger')
 
-                return render_template('/produto/editar' + id)
+                return redirect('/produto/editar/' + id)
 
         return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
 @produtos_bp.route('/detalhe/<id>', methods = ['GET', 'POST'])
-@login_required
 def detalhe(id):
+    form_cadastro = CadastroForm()
+    form_login = LoginForm()
     produto = Produto.query.get(id)
     
-    return render_template('buscas/detalhe.html', produto=produto)
+    return render_template('buscas/detalhe_produto.html', produto=produto,  form_cadastro = form_cadastro, form_login = form_login)
 
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])

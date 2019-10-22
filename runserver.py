@@ -18,6 +18,6 @@ def index():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     bootstrap = Bootstrap(app)
-#    with app.app_context():
-#        db.create_all()
+    # with app.app_context():
+        # db.create_all()
     app.run('0.0.0.0', port=port)

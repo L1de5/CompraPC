@@ -26,20 +26,31 @@
 
         
         {% if current_user.nome %}
-            <div> 
-                <a class="btn btn-outline-dark my-2 my-sm-0 btn-icon" href="#"> 
-                    <i class="material-icons green-icon"> shopping_cart </i> 
-                </a>
-    
-                <a class="btn btn-outline-dark my-2 my-sm-0 btn-icon" href="/produto/adicionar">
-                    <i class="material-icons green-icon"> add_shopping_cart </i> 
-                </a> 
+            <div class="btn-group dropleft">
+                <button type="button" class="dropdown-toggle btn-icon btn btn-outline-dark my-2 my-sm-0 btn-ico" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons green-icon"> menu </i> 
+                </button>
 
-                <a class="btn btn-outline-danger my-2 my-sm-0 btn-icon" href="/usuario/logout"> 
-                    <i class="material-icons red-icon"> exit_to_app </i> 
-                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#"> 
+                        Carrinho de Compras 
+                    </a>
+
+                    <a class="dropdown-item" href="/produto/adicionar"> 
+                        Adicionar Produtos 
+                    </a>
+
+                    <a class="dropdown-item" href="#">
+                        Alguma coisa aqui
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" href="/usuario/logout">
+                        Sair
+                    </a>
+                </div>
             </div>
-
         {% else %}
             <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
                 Entrar
@@ -63,38 +74,20 @@
     <div id="produtos">
             
         {% if produtos %}
-            {% if current_user.nome %}
                 {% for produto in produtos %}
                     <div class="card" style="width: 18rem;">
                         <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
                         <div class="card-body">
                             <h5 class="card-title"> {{ produto.nome }} </h5>
-                            <p class="card-text"> {{ produto.descricao }} </p>
-
+                            <p class="card-text"> Descrição: {{ produto.descricao }} </p>                        
                             <div id="btn-acoes-produto">
-                                <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-5"> 
-                                    <i class="material-icons green-icon"> edit </i> 
-                                </a>
-
-                                <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-5"> 
-                                    <i class="material-icons red-icon"> delete </i> 
+                                <a href="/produto/detalhe/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-12"> 
+                                    <i class="material-icons green-icon"> add_circle </i> 
                                 </a>
                             </div>
                         </div>
                     </div>            
                 {% endfor %}
-            {% else %}
-                {% for produto in produtos %}
-                    <div class="card" style="width: 18rem;">
-                        <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
-                        <div class="card-body">
-                            <h5 class="card-title"> {{ produto.nome }} </h5>
-                            <p class="card-text"> {{ produto.descricao }} </p>
-                            <a href="/produto/detalhe/{{ produto.id }}" class="btn btn-outline-dark btn-block"> Comprar </a>
-                        </div>
-                    </div>            
-                {% endfor %}
-            {% endif %}
         {% else %}
             <span> Nenhum produto encontrado </span>
         {% endif %}

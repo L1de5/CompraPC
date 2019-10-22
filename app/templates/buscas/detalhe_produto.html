@@ -25,19 +25,29 @@
         
         {% if current_user.nome %}
             <div class="btn-group dropleft">
-                <button class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menu
+                <button type="button" class="dropdown-toggle btn-icon btn btn-outline-dark my-2 my-sm-0 btn-ico" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons green-icon"> menu </i> 
                 </button>
-              
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="#"> Carrinho de Compras </a>
-                    <a class="dropdown-item" href="#"> Alterar Informações </a>
-                    <a class="dropdown-item" href="/usuario/logout"> Sair </a>
-                </div>
 
-                <a class="btn btn-outline-dark my-2 my-sm-0" href="/produto/adicionar">
-                    Adicionar Produto
-                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#"> 
+                        Carrinho de Compras 
+                    </a>
+
+                    <a class="dropdown-item" href="/produto/adicionar"> 
+                        Adicionar Produtos 
+                    </a>
+
+                    <a class="dropdown-item" href="#">
+                        Alguma coisa aqui
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" href="/usuario/logout">
+                        Sair
+                    </a>
+                </div>
             </div>
         {% else %}
             <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
@@ -51,15 +61,70 @@
             <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
             <div class="card-body">
                 <h5 class="card-title"> {{ produto.nome }} </h5>
-                <p class="card-text"> {{ produto.descricao }} </p>
-                <p class="card-text"> {{ produto.preco }} </p>
-                <p class="card-text"> {{ produto.quantidade }} </p>
+                <p class="card-text"> Descrição: {{ produto.descricao }} </p>
+                <p class="card-text"> Preço: {{ produto.preco }} </p>
+                <p class="card-text"> Quantidade restante: {{ produto.quantidade }} </p>
+                <div id="btn-acoes-produto">
+                    {% if current_user.nome %} 
+                    <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-6"> 
+                        <i class="material-icons green-icon"> edit </i> 
+                    </a>
+                    
+                    <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-6"> 
+                        <i class="material-icons red-icon"> delete </i> 
+                    </a>
+                </div>
+                {% else %}
+                    <a data-toggle="modal" data-target="#loginModal" class="btn btn-outline-dark btn-icon col-12"> 
+                        <i class="material-icons green-icon"> add_shopping_cart </i> 
+                    </a>
+                {% endif %}
             </div>
-            <div class="card-body">
-                <a href="/produto/excluir/{{ produto.id }}" class="card-link">Excluir</a>
-            </div>
-        </div>            
+        </div>
+
     </div>
 
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle"> Entrar </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ wtf.quick_form(form_login, action='/usuario/login', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Cancelar </button>
+    
+                        <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#cadastroModal">
+                            Cadastrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="modal fade" id="cadastroModal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalCenterTitle"> Cadastrar </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ wtf.quick_form(form_cadastro, action='/usuario/cadastro', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Voltar </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
 
 {% endblock %}

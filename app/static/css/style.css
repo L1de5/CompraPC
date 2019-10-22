@@ -51,12 +51,12 @@ nav {
 
 .btn-icon {
     border: none;
-    background-color: white;
+    background-color: white !important;
     padding: 0px;
 }
 
 .btn-icon:hover {
-    background-color: white;
+    background-color: white !important;
 }
 
 .material-icons {
@@ -106,4 +106,36 @@ nav {
     border-radius: 10px;
     padding: 1em;
     height: 100vh;
+}
+
+.btn-outline-dark:not(:disabled):not(.disabled).active, .btn-outline-dark:not(:disabled):not(.disabled):active, .show > .btn-outline-dark.dropdown-toggle {
+    color: #fff;
+    background: none;
+    border: none;
+
+}
+
+.dropleft .dropdown-toggle::before {
+    vertical-align: 0;
+    display: none;
+}
+
+.dropdown-menu {
+    width: 210px;
+}
+
+.dropdown-menu .show{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dropdown-menu a {
+    padding: 5px;
+    margin: 0px;
+    text-align: center;
+}
+
+.dropdown-menu a:hover {
+    background-color: #dedede;
 }
