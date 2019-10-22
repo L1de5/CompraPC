@@ -1,0 +1,26 @@
+form {
+    color: white;
+}
+
+nav {
+    margin: 0px;
+}
+
+.btn-outline-dark {
+    background-color: #5D8018;
+    color: white;
+    border-color: #5D8018;
+}
+
+.btn-outline-dark:hover {
+    background-color: rgba(15, 24, 1, 0.781);
+    border-color: rgba(15, 24, 1, 0.781);
+}
+
+.conteudo-pagina {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

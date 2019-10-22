@@ -49,6 +49,45 @@ nav {
     border-color: #5D8018;
 }
 
+.btn-icon {
+    border: none;
+    background-color: white;
+    padding: 0px;
+}
+
+.btn-icon:hover {
+    background-color: white;
+}
+
+.material-icons {
+    padding-top: 5px;
+}
+
+.green-icon {
+    color: #5D8018;
+}
+
+.green-icon:hover {
+    color: rgb(69, 95, 17);
+}
+
+.red-icon {
+    color: #dc3545;
+}
+
+.red-icon:hover {
+    color: #a32733;
+}
+
+#btn-acoes-produto {
+    display: flex;
+    justify-content: space-between;
+}
+
+.alert-produtos {
+    margin: 10px 20px;
+}
+
 #titulo {
     width: 100%;
     margin-bottom: 1.5em;

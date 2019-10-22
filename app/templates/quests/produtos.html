@@ -1,30 +1,62 @@
-{% extends 'app/templates/layout/layout.html' %}
+{% extends "layout/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block tittle %} Formulario {% endblock %}
+{% block title %}
+    <title> {{ titulo }} </title>
+{% endblock %}
 
-{% block body %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/form_produto.css') }}">
+{% endblock %}
 
-<form action="/home/produtos" method="post">
-    {{ form.csrf_token }}
-    {{ form.id(hidden=True)}}
-    Nome:
-    <br>
-    {{ form.nome(size=35)}}
-    <br>
-    Descrição:
-    <br>
-    {{ form.descricao(cols="51", rows="5")}}
-    <br>
-    Preço:
-    <br>
-    {{ form.preco(size=35)}}
-    <br>
-    Quantidade:
-    <br>
-    {{ form.quantidade(size=35)}}
-    <br>
-    {{ form.submit}}
-    <br>
-</form>
+{% block body %}  
+    <nav class="navbar">
+        <div>
+            <span class="navbar-brand"> CompraPC </span>
+        </div>
+
+        <div>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn my-2 my-sm-0 btn-icon" type="submit"> 
+                    <i class="material-icons green-icon"> search </i> 
+                </button>
+            </form>
+        </div>
+
+        
+        {% if current_user.nome %}
+            <div> 
+                <a class="btn my-2 my-sm-0 btn-icon" href="/produto">
+                    <i class="material-icons green-icon"> home </i> 
+                </a> 
+
+                <a class="btn btn-outline-danger my-2 my-sm-0 btn-icon" href="/usuario/logout"> 
+                    <i class="material-icons red-icon"> exit_to_app </i> 
+                </a>
+            </div>
+
+        {% endif %}
+    </nav>
+
+    <div class="conteudo-pagina">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div>
+            {{ wtf.quick_form(form_produto, extra_classes='col-12', button_map={'submit': 'outline-dark col-8 offset-2'}) }}
+        </div>
+    </div>
 
 {% endblock %}

@@ -18,27 +18,28 @@
         <div>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                <button class="btn btn-outline-dark my-2 my-sm-0" type="submit"> Buscar </button>
+                <button class="btn btn-outline-dark my-2 my-sm-0 btn-icon" type="submit"> 
+                    <i class="material-icons green-icon"> search </i> 
+                </button>
             </form>
         </div>
 
         
         {% if current_user.nome %}
-            <div class="btn-group dropleft">
-                <button class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menu
-                </button>
-              
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="#"> Carrinho de Compras </a>
-                    <a class="dropdown-item" href="#"> Alterar Informações </a>
-                    <a class="dropdown-item" href="/usuario/logout"> Sair </a>
-                </div>
+            <div> 
+                <a class="btn btn-outline-dark my-2 my-sm-0 btn-icon" href="#"> 
+                    <i class="material-icons green-icon"> shopping_cart </i> 
+                </a>
+    
+                <a class="btn btn-outline-dark my-2 my-sm-0 btn-icon" href="/produto/adicionar">
+                    <i class="material-icons green-icon"> add_shopping_cart </i> 
+                </a> 
 
-                <a class="btn btn-outline-dark my-2 my-sm-0" href="/produto/adicionar">
-                    Adicionar Produto
+                <a class="btn btn-outline-danger my-2 my-sm-0 btn-icon" href="/usuario/logout"> 
+                    <i class="material-icons red-icon"> exit_to_app </i> 
                 </a>
             </div>
+
         {% else %}
             <button class="btn btn-outline-dark my-2 my-sm-0" data-toggle="modal" data-target="#loginModal">
                 Entrar
@@ -46,18 +47,54 @@
         {% endif %}
     </nav>
 
-    <div id="produtos">
-        {% if produtos %}
-            {% for produto in produtos %}
-                <div class="card" style="width: 18rem;">
-                    <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
-                    <div class="card-body">
-                        <h5 class="card-title"> {{ produto.nome }} </h5>
-                        <p class="card-text"> {{ produto.descricao }} </p>
-                        <a href="/produto/detalhe/{{ produto.id }}" class="btn btn-outline-dark btn-block"> Comprar </a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show alert-produtos" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>            
             {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div id="produtos">
+            
+        {% if produtos %}
+            {% if current_user.nome %}
+                {% for produto in produtos %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+                        <div class="card-body">
+                            <h5 class="card-title"> {{ produto.nome }} </h5>
+                            <p class="card-text"> {{ produto.descricao }} </p>
+
+                            <div id="btn-acoes-produto">
+                                <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-5"> 
+                                    <i class="material-icons green-icon"> edit </i> 
+                                </a>
+
+                                <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-5"> 
+                                    <i class="material-icons red-icon"> delete </i> 
+                                </a>
+                            </div>
+                        </div>
+                    </div>            
+                {% endfor %}
+            {% else %}
+                {% for produto in produtos %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+                        <div class="card-body">
+                            <h5 class="card-title"> {{ produto.nome }} </h5>
+                            <p class="card-text"> {{ produto.descricao }} </p>
+                            <a href="/produto/detalhe/{{ produto.id }}" class="btn btn-outline-dark btn-block"> Comprar </a>
+                        </div>
+                    </div>            
+                {% endfor %}
+            {% endif %}
         {% else %}
             <span> Nenhum produto encontrado </span>
         {% endif %}
@@ -105,46 +142,5 @@
             </div>
         </div>
     </div>
-
-    <!-- <div class="modal fade" id="addProdutoModal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalCenterTitle"> Adicionar Produto </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{ wtf.quick_form(form_add_produto, enctype='multipart/form-data',action='/produto/adicionar', button_map={'submit': 'outline-dark col-6 offset-3'}) }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"> Voltar </button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-
- <!--   <div class="page">
-        <h1> Compra PC </h1>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-       
-
-        wtf.quick_form(form, button_map={'submit': 'primary'})
-    </div> -->
     
 {% endblock %}

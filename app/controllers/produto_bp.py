@@ -30,15 +30,15 @@ def listar():
 
 @produtos_bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
-def produto():
-    form = ProdutoForm()
-
-    if request.method == "POST":
-        nome = form.nome.data
-        descricao = form.descricao.data
-        preco = form.preco.data
-        quantidade = form.quantidade.data
-        arquivo = form.arquivo.data
+def adicionar():
+    form_produto = ProdutoForm()
+    
+    if form_produto.validate_on_submit():
+        nome = form_produto.nome.data
+        descricao = form_produto.descricao.data
+        preco = form_produto.preco.data
+        quantidade = form_produto.quantidade.data
+        arquivo = form_produto.arquivo.data
         extencao_foto = arquivo.filename.split('.')[-1].lower()
         novo_nome_foto = uuid4()
         is_permitido = permitido(extencao_foto)
@@ -57,6 +57,7 @@ def produto():
             try:
                 db.session.add(produto)
                 db.session.commit()
+                flash(u'Produto adicionado com sucesso!', 'success')
 
                 return redirect('/produto')
             except exc.SQLAlchemyError:
@@ -66,7 +67,52 @@ def produto():
         else:
             flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
 
-    return render_template('index.html', form=form, titulo='Produto')
+    return render_template('quests/produtos.html', form_produto = form_produto, titulo='Produto')
+
+@produtos_bp.route('/editar/<id>', methods=['GET', 'POST'])
+@login_required
+def editar(id):
+    produto = Produto.query.filter_by(id = id).first()
+
+    if produto:
+        form_produto = ProdutoForm()
+        form_produto.nome.data = produto.nome
+        form_produto.descricao.data = produto.descricao
+        form_produto.preco.data = produto.preco
+        form_produto.quantidade.data = produto.quantidade
+
+        if form_produto.validate_on_submit():
+            arquivo = form_produto.arquivo.data
+            extencao_foto = arquivo.filename.split('.')[-1].lower()
+            novo_nome_foto = uuid4()
+            is_permitido = permitido(extencao_foto)
+                
+            if is_permitido:
+                novo_nome_foto = str(novo_nome_foto) + '.' + extencao_foto
+                foto = secure_filename(arquivo.filename)
+                diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
+                diretorio_novo = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome_foto)
+                arquivo.save(diretorio)
+                os.rename(diretorio, diretorio_novo)
+                produto.arquivo = novo_nome_foto
+
+            try:
+                produto = Produto.query.filter_by(id = id).first()
+                produto.nome = request.form['nome']
+                produto.descricao = request.form['descricao']
+                produto.preco = request.form['preco']
+                produto.quantidade = request.form['quantidade']
+                db.session.commit()
+
+                flash(u'Produto alterado com sucesso!', 'success')
+
+                return redirect('/produto')
+            except exc.SQLAlchemyError:
+                flash(u'Ocorreu um problema ao tentar alterar produto, tente novamente!', 'danger')
+
+                return render_template('/produto/editar' + id)
+
+        return render_template('quests/produtos.html', form_produto = form_produto, titulo='Produto')
 
 @produtos_bp.route('/detalhe/<id>', methods = ['GET', 'POST'])
 @login_required
@@ -79,9 +125,14 @@ def detalhe(id):
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required
 def excluir(id):
-    produto = Produto.query.get(id)
-    db.session.delete(produto)
-    db.session.commit()
+    try:
+        produto = Produto.query.get(id)
+        db.session.delete(produto)
+        db.session.commit()
+        flash(u'Produto deletado com sucesso!', 'success')
+    except exc.SQLAlchemyError:
+        flash(u'Ocorreu um problema ao tentar deletar produto, tente novamente!', 'danger')
+
     return redirect('/produto/')
 
 
