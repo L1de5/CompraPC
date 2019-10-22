@@ -58,11 +58,14 @@
 
     <div id="produtos">
         <div class="card" style="width: 50rem;">
-            <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+            <div class="card-image">
+                <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+            </div>
+    
             <div class="card-body">
                 <h5 class="card-title"> {{ produto.nome }} </h5>
                 <p class="card-text"> Descrição: {{ produto.descricao }} </p>
-                <p class="card-text"> Preço: {{ produto.preco }} </p>
+                <p class="card-text"> Preço: R$ {{ produto.preco }} </p>
                 <p class="card-text"> Quantidade restante: {{ produto.quantidade }} </p>
                 <div id="btn-acoes-produto">
                     {% if current_user.nome %} 

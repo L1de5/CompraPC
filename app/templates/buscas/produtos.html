@@ -76,7 +76,11 @@
         {% if produtos %}
                 {% for produto in produtos %}
                     <div class="card" style="width: 18rem;">
-                        <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+                        <div class="card-image">
+                            <div>
+                                <img src="{{ url_for('static', filename=produto.arquivo) }}" class="card-img-top" alt="Foto top aqui">
+                            </div>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title"> {{ produto.nome }} </h5>
                             <p class="card-text"> Descrição: {{ produto.descricao }} </p>                        

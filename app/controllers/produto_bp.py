@@ -68,6 +68,8 @@ def adicionar():
         else:
             flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
 
+            return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
+
     return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
 @produtos_bp.route('/editar/<id>', methods=['GET', 'POST'])
@@ -90,11 +92,11 @@ def editar(id):
                 
             if is_permitido:
                 novo_nome_foto = str(novo_nome_foto) + '.' + extencao_foto
-                foto = secure_filename(arquivo.filename)
+                foto = produto.arquivo.split('/')[-1]
                 diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
                 diretorio_novo = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome_foto)
-                arquivo.save(diretorio)
-                os.rename(diretorio, diretorio_novo)
+                os.remove(diretorio)
+                arquivo.save(diretorio_novo)
                 produto.arquivo = 'uploads/'+novo_nome_foto
 
             try:
@@ -130,8 +132,12 @@ def detalhe(id):
 def excluir(id):
     try:
         produto = Produto.query.get(id)
+        foto = produto.arquivo.split('/')[-1]
+        diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
+        os.remove(diretorio)
         db.session.delete(produto)
         db.session.commit()
+        
         flash(u'Produto deletado com sucesso!', 'success')
     except exc.SQLAlchemyError:
         flash(u'Ocorreu um problema ao tentar deletar produto, tente novamente!', 'danger')
