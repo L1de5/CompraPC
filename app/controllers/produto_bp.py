@@ -26,7 +26,7 @@ def listar():
     form_add_produto = ProdutoForm()
     produtos = Produto.query.order_by(Produto.id).all()
 
-    return render_template('buscas/listarp.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
+    return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
 @produtos_bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
@@ -67,7 +67,7 @@ def adicionar():
         else:
             flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
 
-    return render_template('quests/produtos.html', form_produto = form_produto, titulo='Produto')
+    return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
 @produtos_bp.route('/editar/<id>', methods=['GET', 'POST'])
 @login_required
@@ -112,7 +112,7 @@ def editar(id):
 
                 return render_template('/produto/editar' + id)
 
-        return render_template('quests/produtos.html', form_produto = form_produto, titulo='Produto')
+        return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
 @produtos_bp.route('/detalhe/<id>', methods = ['GET', 'POST'])
 @login_required
