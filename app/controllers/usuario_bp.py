@@ -24,14 +24,12 @@ def login():
         if cliente:
             if cliente.senha == senha.hexdigest():
                 login_user(cliente)
-
-                return redirect('/produto')
             else:
                 flash(u'Senha inválida!', 'danger')
         else:
             flash(u'Usuário inválido!', 'danger')
 
-    return render_template('index.html', form = form, titulo = 'Logar')
+    return redirect('/produto')
 
 @usuario_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():

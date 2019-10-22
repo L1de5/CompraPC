@@ -24,7 +24,7 @@ def listar():
     form_cadastro = CadastroForm()
     form_login = LoginForm()
     form_add_produto = ProdutoForm()
-    produtos = Produto.query.all()
+    produtos = Produto.query.order_by(Produto.id).all()
 
     return render_template('buscas/listarp.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
@@ -94,7 +94,7 @@ def editar(id):
                 diretorio_novo = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome_foto)
                 arquivo.save(diretorio)
                 os.rename(diretorio, diretorio_novo)
-                produto.arquivo = novo_nome_foto
+                produto.arquivo = 'uploads/'+novo_nome_foto
 
             try:
                 produto = Produto.query.filter_by(id = id).first()
