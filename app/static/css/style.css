@@ -28,6 +28,10 @@ nav {
     color: white;
 }
 
+.modal-body {
+    color: black;
+}
+
 .close span {
     color: white;
 }

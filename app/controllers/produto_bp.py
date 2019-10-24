@@ -126,6 +126,13 @@ def detalhe(id):
     
     return render_template('buscas/detalhe_produto.html', produto=produto,  form_cadastro = form_cadastro, form_login = form_login)
 
+@produtos_bp.route('/addC/<id>', methods = ['GET', 'POST'])
+@login_required
+def addCart(id):
+    cliente = current_user
+    produto = Produto.query.get(id)
+    cliente.prod_cart.append(produto)
+    return redirect('/produto')
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required
