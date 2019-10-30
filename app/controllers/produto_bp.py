@@ -7,8 +7,10 @@ from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
 from app.models.banco.produto import Produto
 from app.models.banco.Venda import Venda
+from app.controllers.usuario_bp import *
+from app.ext.login import *
 from app.ext.database import db
-from flask_login import login_required
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from hashlib import md5
 from sqlalchemy import exc
@@ -126,12 +128,22 @@ def detalhe(id):
     
     return render_template('buscas/detalhe_produto.html', produto=produto,  form_cadastro = form_cadastro, form_login = form_login)
 
+@produtos_bp.route('/carrinho')
+def carrinho():
+    cliente = current_user
+    produtos = cliente.prod_cart
+
+    return render_template('buscas/carrinho.html', produtos = produtos)
+
+
 @produtos_bp.route('/addC/<id>', methods = ['GET', 'POST'])
 @login_required
 def addCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
     cliente.prod_cart.append(produto)
+    db.session.merge(cliente)
+    db.session.commit()
     return redirect('/produto')
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
