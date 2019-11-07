@@ -153,3 +153,14 @@ nav {
     background-color: #d1d1d1;
 }
 
+.card-img-top {
+    max-height: 270px;
+}
+
+.navbar-brand {
+    color:rgb(69, 95, 17);
+}
+
+.navbar-brand:hover {
+    color: rgb(69, 95, 17);
+}

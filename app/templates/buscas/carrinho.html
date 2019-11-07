@@ -7,12 +7,13 @@
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/carrinho.css') }}">
 {% endblock %}
 
 {% block body %}
     <nav class="navbar">
         <div>
-            <span class="navbar-brand"> CompraPC </span>
+            <a class="navbar-brand" href="/"> CompraPC </a>
         </div>
 
         <div>
@@ -63,31 +64,60 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    {% if produtos %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Preço</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for produto in produtos %}
+
+
+    <div class="container-carrinho">
+        {% if produtos %}
+            <table class="carrinho-compras">
+                <thead>
                     <tr>
-                        <th scope="row">1</th>
-                            <td>{{ produto.nome }}</td>
-                            <td>{{ produto.descricao }} </td>
-                            <td>{{ produto.preco }}</td>
-                            
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Preço</th>
+                        <th scope="col">Quantidade</th>
                     </tr>
-                {% endfor %}
-                    </tbody>
-                </table>   
-    {% else %}
-        <span> Nenhum produto encontrado </span>
-    {% endif %}
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                        <tr>
+                            <td scope="row">
+                                <img src="{{ url_for('static', filename=produto.arquivo) }}" class="foto-prod-carrinho" alt="Foto top aqui">
+                            </td>
+                            <td class="overflow-text">
+                                {{ produto.nome }}
+                            </td>
+                            <td class="overflow-text">{{ produto.descricao }} </td>
+                            <td> R$ {{ produto.preco }}</td>
+                            <td> 
+                                <input type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="1" min="1">
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-outline-dark btn-icon"> 
+                                    <i class="material-icons red-icon"> delete </i> 
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-outline-success">
+                                Comprar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+        {% else %}
+            <span> Nenhum produto encontrado </span>
+        {% endif %}
+    </div>
         
     </div>
 

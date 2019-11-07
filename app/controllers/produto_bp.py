@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from app import app
-from flask import render_template, request, Blueprint, redirect, flash
+import json
+from flask import render_template, request, Blueprint, redirect, flash, session
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
@@ -27,6 +28,10 @@ def listar():
     form_login = LoginForm()
     form_add_produto = ProdutoForm()
     produtos = Produto.query.order_by(Produto.id).all()
+
+    produto = Produto.query.get(1).asdict()
+    if produto:
+        print(produto)
 
     return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
@@ -142,9 +147,10 @@ def addCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
     cliente.prod_cart.append(produto)
+    session['carrinho'].append(produto)
     db.session.merge(cliente)
     db.session.commit()
-    return redirect('/produto')
+    return redirect('/produto/carrinho')
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required

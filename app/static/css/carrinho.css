@@ -1,0 +1,52 @@
+.foto-prod-carrinho {
+    width: 50px;
+}
+
+.carrinho-compras {
+    vertical-align: middle;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    color: black;
+}
+
+.carrinho-compras tbody tr td {
+    padding: 20px;
+}
+
+.carrinho-compras thead tr th {
+   padding: 15px;
+}
+.inpt-qnt {
+    width: 50px;
+    border: none;
+    text-align: center;
+}
+
+.container-carrinho {
+    margin-top: 20px;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.overflow-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+
+X.overflow-text:hover{
+    display: block;
+}
+
+.overflow-text:hover{
+    overflow: visible;
+    white-space: normal;
+    max-width: 100%;
+    width: 300px;
+    z-index: 1; /* stack above subsequent cells */
+}
