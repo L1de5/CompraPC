@@ -69,11 +69,13 @@
                 <p class="card-text"> Quantidade restante: {{ produto.quantidade }} </p>
                 <div id="btn-acoes-produto">
                     {% if current_user.nome %} 
-                    <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-6"> 
+                    <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-4"> 
                         <i class="material-icons green-icon"> edit </i> 
                     </a>
-                    
-                    <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-6"> 
+                    <a href="/produto/addC/{{ produto.id }}"  class="btn btn-outline-dark btn-icon col-4"> 
+                        <i class="material-icons green-icon"> add_shopping_cart </i> 
+                    </a>
+                    <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-4"> 
                         <i class="material-icons red-icon"> delete </i> 
                     </a>
                 </div>

@@ -15,7 +15,8 @@ email_bp = Blueprint('email', __name__, url_prefix='/email')
 def cadastro(): 
     email = current_user.email
     token = serialize_obj.dumps(email, salt='email-confirm')
-    message = Message('Confirm Email', sender='digaomartins8@gmail.com', recipients = [email])
+    message = Message(
+        'Confirm Email', sender='jp.20011973@gmail.com', recipients=[email])
     link = url_for('email.confirm_email', token = token, _external = True)
     message.body = 'Por favor verifique sua conta clicando no link: {}'.format(link)
 

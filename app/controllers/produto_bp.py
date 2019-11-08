@@ -29,9 +29,9 @@ def listar():
     form_add_produto = ProdutoForm()
     produtos = Produto.query.order_by(Produto.id).all()
 
-    produto = Produto.query.get(1).asdict()
-    if produto:
-        print(produto)
+    #produto = Produto.query.get(1).asdict()
+    #if produto:
+    #    print(produto)
 
     return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
@@ -63,15 +63,15 @@ def adicionar():
             produto = Produto(nome = nome, descricao = descricao, preco = preco, quantidade = quantidade, arquivo = 'uploads/'+novo_nome_foto)
 
             try:
+                flash(u'Produto adicionado com sucesso!', 'success')
                 db.session.add(produto)
                 db.session.commit()
-                flash(u'Produto adicionado com sucesso!', 'success')
 
                 return redirect('/produto')
             except exc.SQLAlchemyError:
                 flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
 
-                return render_template('/produto')
+                return redirect('/produto')
         else:
             flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
 
@@ -147,10 +147,30 @@ def addCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
     cliente.prod_cart.append(produto)
-    session['carrinho'].append(produto)
+
     db.session.merge(cliente)
     db.session.commit()
     return redirect('/produto/carrinho')
+
+
+@produtos_bp.route('/comprar', methods=['GET', 'POST'])
+@login_required
+def comprar():
+    cliente = current_user
+    produtos = cliente.prod_cart
+    valor = 0
+    for prod in produtos:
+        valor = valor + prod.preco
+        produto = Produto.query.get(prod.id)
+        if(produto.quantidade > 0):
+            produto.quantidade = produto.quantidade - 1
+        else:
+            return redirect("/produto")
+        db.session.merge(produto)
+
+    db.session.merge(cliente)
+    db.session.commit()
+    return render_template('/buscas/compra.html', valor = valor)
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required

@@ -66,59 +66,11 @@
     {% endwith %}
 
 
-    <div class="container-carrinho">
-        {% if produtos %}
-            <table class="carrinho-compras">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Descrição</th>
-                        <th scope="col">Preço</th>
-                        <th scope="col">Quantidade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for produto in produtos %}
-                        <tr>
-                            <td scope="row">
-                                <img src="{{ url_for('static', filename=produto.arquivo) }}" class="foto-prod-carrinho" alt="Foto top aqui">
-                            </td>
-                            <td class="overflow-text">
-                                {{ produto.nome }}
-                            </td>
-                            <td class="overflow-text">{{ produto.descricao }} </td>
-                            <td> R$ {{ produto.preco }}</td>
-                            <td> 
-                                <input type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="1" min="1">
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-outline-dark btn-icon"> 
-                                    <i class="material-icons red-icon"> delete </i> 
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a class="btn btn-outline-success" href="/produto/comprar">
-                                Comprar
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>   
-        {% else %}
-            <span> Nenhum produto encontrado </span>
-        {% endif %}
-    </div>
-        
+        <div class="container-carrinho">
+         Feita a compra de {{valor}}
+         <a href="/email/enviar" class="btn btn-outline-success" > Enviar boleto para meu email</a>
+        </div>
+            
     </div>
 
 {% endblock %}
