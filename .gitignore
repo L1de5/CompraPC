@@ -136,6 +136,11 @@ bin/
 __pycache__/*
 *.py[cod]
 
+# Configurações vscode
 .vscode/
 
+# Pasta de uploads
 app/static/uploads
+
+# Arquivo de configurações
+config.cfg
