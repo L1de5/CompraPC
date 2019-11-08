@@ -7,11 +7,13 @@ from flask import redirect, Blueprint
 from app.controllers.setup_bp import setup_bp
 from app.controllers.usuario_bp import usuario_bp
 from app.controllers.produto_bp import produtos_bp
+from app.controllers.email_bp import email_bp
 from app.ext.database import db
 
 app.register_blueprint(setup_bp)
 app.register_blueprint(usuario_bp)
 app.register_blueprint(produtos_bp)
+app.register_blueprint(email_bp)
 
 @app.route('/')
 def index():
