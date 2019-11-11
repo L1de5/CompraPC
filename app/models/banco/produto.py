@@ -4,6 +4,7 @@ from app.ext.database import db
 
 class Produto(db.Model):
     __tablename__ = 'produto'
+
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     descricao = db.Column(db.String(200), nullable=False)
@@ -11,6 +12,7 @@ class Produto(db.Model):
     quantidade = db.Column(db.Integer, nullable=False)
     arquivo = db.Column(db.String(400), nullable=False)
     
-    #def __init__(self, **kwargs):
-     #   for name, value in kwargs.items():
-      #      self.name = value
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+            

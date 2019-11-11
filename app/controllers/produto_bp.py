@@ -30,16 +30,12 @@ def listar():
     form_add_produto = ProdutoForm()
     produtos = Produto.query.order_by(Produto.id).all()
 
-    #produto = Produto.query.get(1).asdict()
-
-
     return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
 @produtos_bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
 def adicionar():
     form_produto = ProdutoForm()
-    print(form_produto.preco.data)
     
     if form_produto.validate_on_submit():
         nome = form_produto.nome.data
@@ -141,10 +137,8 @@ def detalhe(id):
 def carrinho():
     cliente = current_user
     produtos = cliente.prod_cart
-    
 
     return render_template('buscas/carrinho.html', produtos = produtos)
-
 
 @produtos_bp.route('/addC/<id>', methods = ['GET', 'POST'])
 @login_required
@@ -179,9 +173,16 @@ def comprar():
     #prod_venda.append(produtos)
     venda = Venda(data = datetime.now(), comprador = cliente.id, prod_venda = produtos)
     cliente.prod_cart = []
-    db.session.merge(cliente)
-    db.session.add(venda)
-    db.session.commit()
+
+    try:
+        db.session.merge(cliente)
+        db.session.add(venda)
+        db.session.commit()
+        
+        flash(u'Produto comprado com sucesso!', 'success')
+    except exc.SQLAlchemyError:
+        flash(u'Ocorreu um problema ao tentar comprar produto, tente novamente!', 'danger')
+
     return render_template('/buscas/compra.html', valor=valor)
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
