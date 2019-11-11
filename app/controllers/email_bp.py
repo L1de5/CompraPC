@@ -5,25 +5,26 @@ from flask import Blueprint, request, url_for
 from flask_login import current_user, login_required
 from app.models.banco.Cliente import Cliente
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+import smtplib
 
 email_bp = Blueprint('email', __name__, url_prefix='/email')
 
 # Exemplo de virificação de email
+
 
 @email_bp.route('/enviar')
 @login_required
 def cadastro(): 
     email = current_user.email
     token = serialize_obj.dumps(email, salt='email-confirm')
-    message = Message(
-        'Confirm Email', sender='jp.20011973@gmail.com', recipients=[email])
-    link = url_for('email.confirm_email', token = token, _external = True)
-    message.body = 'Por favor verifique sua conta clicando no link: {}'.format(link)
+    message = Message('Confirm Email', sender='jp.20011973@gmail.com', recipients=[email], body='Sua comrpa foi realizada com sucesso')
+    #link = url_for('email.confirm_email', token = token, _external = True)
+    #message.body = 'Por favor verifique sua conta clicando no link: {}'.format(link)
 
-    try:
-        mail.send(message)
-    except Exception:
-        return 'Não foi possivel enviar email de verificação, tente novamente em outro momento!'
+    #try:
+    mail.send(message)
+    #except Exception:
+    #    return 'Não foi possivel enviar email de verificação, tente novamente em outro momento!'
 
     return 'The email is: {} and the tokes is: {}'.format(current_user.email, token)
 

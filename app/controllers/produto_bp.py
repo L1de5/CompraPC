@@ -16,6 +16,7 @@ from werkzeug.utils import secure_filename
 from hashlib import md5
 from sqlalchemy import exc
 from uuid import uuid4
+from datetime import datetime
 
 produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
 
@@ -30,8 +31,7 @@ def listar():
     produtos = Produto.query.order_by(Produto.id).all()
 
     #produto = Produto.query.get(1).asdict()
-    #if produto:
-    #    print(produto)
+
 
     return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
 
@@ -90,38 +90,42 @@ def editar(id):
         form_produto.descricao.data = produto.descricao
         form_produto.preco.data = produto.preco
         form_produto.quantidade.data = produto.quantidade
-
+        
         if form_produto.validate_on_submit():
             arquivo = form_produto.arquivo.data
             extencao_foto = arquivo.filename.split('.')[-1].lower()
             novo_nome_foto = uuid4()
             is_permitido = permitido(extencao_foto)
-                
+
             if is_permitido:
                 novo_nome_foto = str(novo_nome_foto) + '.' + extencao_foto
                 foto = produto.arquivo.split('/')[-1]
                 diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
-                diretorio_novo = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome_foto)
+                diretorio_novo = os.path.join(
+                    app.config['UPLOAD_FOLDER'], novo_nome_foto)
                 os.remove(diretorio)
                 arquivo.save(diretorio_novo)
                 produto.arquivo = 'uploads/'+novo_nome_foto
 
             try:
-                produto = Produto.query.filter_by(id = id).first()
+                produto = Produto.query.filter_by(id=id).first()
                 produto.nome = request.form['nome']
                 produto.descricao = request.form['descricao']
                 produto.preco = request.form['preco']
                 produto.quantidade = request.form['quantidade']
-                
+
+                db.session.merge(produto)
                 db.session.commit()
 
                 flash(u'Produto alterado com sucesso!', 'success')
 
                 return redirect('/produto')
             except exc.SQLAlchemyError:
-                flash(u'Ocorreu um problema ao tentar alterar produto, tente novamente!', 'danger')
+                flash(
+                    u'Ocorreu um problema ao tentar alterar produto, tente novamente!', 'danger')
 
                 return redirect('/produto/editar/' + id)
+        
 
         return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
@@ -137,6 +141,7 @@ def detalhe(id):
 def carrinho():
     cliente = current_user
     produtos = cliente.prod_cart
+    
 
     return render_template('buscas/carrinho.html', produtos = produtos)
 
@@ -146,11 +151,14 @@ def carrinho():
 def addCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
-    cliente.prod_cart.append(produto)
-
-    db.session.merge(cliente)
-    db.session.commit()
-    return redirect('/produto/carrinho')
+    if(produto.quantidade > 0):
+        cliente.prod_cart.append(produto)
+        db.session.merge(cliente)
+        db.session.commit()
+    else:
+        flash(u'Produto nao esta mais em estoque', 'danger')
+    
+    return redirect('/produto/')
 
 
 @produtos_bp.route('/comprar', methods=['GET', 'POST'])
@@ -164,13 +172,17 @@ def comprar():
         produto = Produto.query.get(prod.id)
         if(produto.quantidade > 0):
             produto.quantidade = produto.quantidade - 1
+            db.session.merge(produto)
         else:
-            return redirect("/produto")
-        db.session.merge(produto)
-
+            flash(u'Produto {} acabou de sair de estoque, infelizmente nao foi possivel completar sua compra, retire ele do carrinho para prosseguir'.format(prod.nome), 'danger')
+            return redirect('/produto/carrinho')
+    #prod_venda.append(produtos)
+    venda = Venda(data = datetime.now(), comprador = cliente.id, prod_venda = produtos)
+    cliente.prod_cart = []
     db.session.merge(cliente)
+    db.session.add(venda)
     db.session.commit()
-    return render_template('/buscas/compra.html', valor = valor)
+    return render_template('/buscas/compra.html', valor=valor)
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required

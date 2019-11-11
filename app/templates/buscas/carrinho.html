@@ -107,9 +107,9 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <a class="btn btn-outline-success" href="/produto/comprar">
+                            <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#confirmarModal">
                                 Comprar
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -118,7 +118,19 @@
             <span> Nenhum produto encontrado </span>
         {% endif %}
     </div>
-        
+        <div class="modal fade" id="confirmarModal" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        Deseja mesmo realizar essa compra?
+                        <br>
+                        <a class="btn btn-outline-success" href="/produto/comprar">
+                            Sim
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

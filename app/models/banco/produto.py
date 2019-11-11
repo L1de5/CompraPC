@@ -2,8 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 from app.models.banco.Venda import Venda
 from app.ext.database import db
 
-venda_produto = db.Table('venda_produto', db.Column('id_venda',db.Integer, db.ForeignKey('venda.id'), primary_key=True),db.Column('id_produto', db.Integer, db.ForeignKey('produto.id'), primary_key=True))
-
 class Produto(db.Model):
     __tablename__ = 'produto'
     id = db.Column(db.Integer, primary_key=True)
@@ -12,8 +10,7 @@ class Produto(db.Model):
     preco = db.Column(db.Float, nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
     arquivo = db.Column(db.String(400), nullable=False)
-    vendas = db.relationship('Venda', secondary=venda_produto, backref='produto')
-
+    
     #def __init__(self, **kwargs):
      #   for name, value in kwargs.items():
       #      self.name = value
