@@ -87,7 +87,7 @@ def editar(id):
         form_produto.preco.data = produto.preco
         form_produto.quantidade.data = produto.quantidade
         
-        if form_produto.validate_on_submit():
+        if request.method == 'POST':
             arquivo = form_produto.arquivo.data
             extencao_foto = arquivo.filename.split('.')[-1].lower()
             novo_nome_foto = uuid4()
@@ -133,12 +133,24 @@ def detalhe(id):
     
     return render_template('buscas/detalhe_produto.html', produto=produto,  form_cadastro = form_cadastro, form_login = form_login)
 
-@produtos_bp.route('/carrinho')
+
+@produtos_bp.route('/carrinho', methods=['GET', 'POST'])
 def carrinho():
     cliente = current_user
     produtos = cliente.prod_cart
-
     return render_template('buscas/carrinho.html', produtos = produtos)
+
+
+@produtos_bp.route('/removeC/<id>', methods=['GET', 'POST'])
+@login_required
+def removeCart(id):
+    cliente = current_user
+    produto = Produto.query.get(id)
+    cliente.prod_cart.remove(produto)
+    db.session.merge(cliente)
+    db.session.commit()
+
+    return redirect('/produto/carrinho')
 
 @produtos_bp.route('/addC/<id>', methods = ['GET', 'POST'])
 @login_required
@@ -161,6 +173,9 @@ def comprar():
     cliente = current_user
     produtos = cliente.prod_cart
     valor = 0
+    if request.method == 'POST':
+        quantidade = request.args["quantidade1"]
+        print(quantidade)
     for prod in produtos:
         valor = valor + prod.preco
         produto = Produto.query.get(prod.id)

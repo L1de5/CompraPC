@@ -90,10 +90,11 @@
                             <td class="overflow-text">{{ produto.descricao }} </td>
                             <td> R$ {{ produto.preco }}</td>
                             <td> 
-                                <input type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="1" min="1">
+                                1
+                                <!--<input type="number" class="inpt-qnt" name="quantidade1" id="quantidade1" value="1" min="1">-->
                             </td>
                             <td>
-                                <a href="#" class="btn btn-outline-dark btn-icon"> 
+                                <a href="/produto/removeC/{{produto.id}}" class="btn btn-outline-dark btn-icon"> 
                                     <i class="material-icons red-icon"> delete </i> 
                                 </a>
                             </td>
@@ -124,7 +125,7 @@
                     <div class="modal-body">
                         Deseja mesmo realizar essa compra?
                         <br>
-                        <a class="btn btn-outline-success" href="/produto/comprar">
+                        <a type="submit" class="btn btn-outline-success" href="/produto/comprar">
                             Sim
                         </a>
                     </div>

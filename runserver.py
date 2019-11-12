@@ -20,7 +20,7 @@ def index():
     return redirect(produtos_bp.url_prefix)
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 8180))
     bootstrap = Bootstrap(app)
     
     app.run('0.0.0.0', port=port)
