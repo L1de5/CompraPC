@@ -2,7 +2,7 @@
 import os
 from app import app
 import json
-from flask import render_template, request, Blueprint, redirect, flash, session
+from flask import render_template, request, Blueprint, redirect, flash, session, jsonify
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
@@ -16,6 +16,7 @@ from hashlib import md5
 from sqlalchemy import exc
 from uuid import uuid4
 from datetime import datetime
+import json
 
 produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
 
@@ -146,8 +147,14 @@ def removeCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
     cliente.prod_cart.remove(produto)
-    db.session.merge(cliente)
-    db.session.commit()
+
+    try:
+        db.session.merge(cliente)
+        db.session.commit()
+        
+        flash(u'Produto removido do carrinho com sucesso!', 'success')
+    except exc.SQLAlchemyError:
+        flash(u'Ocorreu um problema ao tentar remover produto do carrinho, tente novamente!', 'danger')
 
     return redirect('/produto/carrinho')
 
@@ -157,14 +164,18 @@ def addCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
 
-    if (produto.quantidade > 0):
-        cliente.prod_cart.append(produto)
-        db.session.merge(cliente)
-        print(cliente.prod_cart)
-        db.session.commit()
+    if produto in cliente.prod_cart:
+        flash(u'Produto já se encontra no carrinho!', 'danger')
     else:
-        flash(u'Produto nao esta mais em estoque', 'danger')
-    
+        if (produto.quantidade > 0):
+            cliente.prod_cart.append(produto)
+            db.session.merge(cliente)
+            db.session.commit()
+
+            flash(u'Produto adicionado ao carrinho com sucesso!', 'success')
+        else:
+            flash(u'Produto não esta mais em estoque', 'danger')
+
     return redirect('/produto/')
 
 
@@ -186,7 +197,6 @@ def comprar():
         else:
             flash(u'Produto {} acabou de sair de estoque, infelizmente nao foi possivel completar sua compra, retire ele do carrinho para prosseguir'.format(prod.nome), 'danger')
             return redirect('/produto/carrinho')
-    #prod_venda.append(produtos)
     venda = Venda(data = datetime.now(), comprador = cliente.id, prod_venda = produtos)
     cliente.prod_cart = []
 

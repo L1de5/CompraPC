@@ -10,7 +10,7 @@ class Produto(db.Model):
     preco = db.Column(db.Float, nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
     arquivo = db.Column(db.String(400), nullable=False)
-    
+  
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
