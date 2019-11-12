@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from app.models.banco.Venda import Venda
 from app.ext.database import db
 
 class Produto(db.Model):

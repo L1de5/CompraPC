@@ -8,7 +8,6 @@ from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
 from app.models.banco.produto import Produto
 from app.models.banco.Venda import Venda
-from app.controllers.usuario_bp import *
 from app.ext.login import *
 from app.ext.database import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -145,9 +144,11 @@ def carrinho():
 def addCart(id):
     cliente = current_user
     produto = Produto.query.get(id)
-    if(produto.quantidade > 0):
+
+    if (produto.quantidade > 0):
         cliente.prod_cart.append(produto)
         db.session.merge(cliente)
+        print(cliente.prod_cart)
         db.session.commit()
     else:
         flash(u'Produto nao esta mais em estoque', 'danger')
@@ -183,7 +184,7 @@ def comprar():
     except exc.SQLAlchemyError:
         flash(u'Ocorreu um problema ao tentar comprar produto, tente novamente!', 'danger')
 
-    return render_template('/buscas/compra.html', valor=valor)
+    return render_template('/buscas/compra.html', valor = valor)
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required

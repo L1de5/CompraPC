@@ -64,13 +64,19 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-
-
-        <div class="container-carrinho carrinho-compras">
-         Feita a compra de {{valor}}
-         <a href="/email/enviar" class="btn btn-outline-success" > Enviar boleto para meu email</a>
+    
+    <div class="container">
+        <div class="container-compra carrinho-compras">
+            <div>
+                Feita a compra no valor de: R$ {{valor}}
+            </div>
+            <div>
+                <a href="/email/enviar/{{ valor }}" class="btn btn-outline-success" > 
+                    Enviar para meu email!
+                </a>
+            </div>
         </div>
-            
     </div>
+            
 
 {% endblock %}
