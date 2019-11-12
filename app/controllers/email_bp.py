@@ -13,7 +13,7 @@ email_bp = Blueprint('email', __name__, url_prefix='/email')
 def compra(valor): 
     email = current_user.email
     # token = serialize_obj.dumps(email, salt='email-confirm')
-    message = Message('Confirm Email', sender='digaomartins8@gmail.com', recipients=[email])
+    message = Message('Compravante de compra', sender='digaomartins8@gmail.com', recipients=[email])
     #link = url_for('email.confirm_email', token = token, _external = True)
     message.body = 'Sua compra no valor de R$ '+ valor +' foi realizada com sucesso!'
 
