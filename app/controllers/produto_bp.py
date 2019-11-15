@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 from app import app
-import json
 from flask import render_template, request, Blueprint, redirect, flash, session, jsonify
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
-from app.models.banco.produto import Produto
+from app.models.banco.Produto import Produto
 from app.models.banco.Venda import Venda
 from app.ext.login import *
 from app.ext.database import db
@@ -16,7 +15,6 @@ from hashlib import md5
 from sqlalchemy import exc
 from uuid import uuid4
 from datetime import datetime
-import json
 
 produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
 

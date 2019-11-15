@@ -3,7 +3,7 @@ from app import app
 from flask import render_template, request, Blueprint, redirect, flash
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
-from app.models.banco.Cliente import Cliente
+from app.models.banco.Usuario import Usuario
 from app.ext.database import db
 from flask_login import login_user, login_required, logout_user
 from hashlib import md5
@@ -19,11 +19,11 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         senha = md5(form.senha.data.encode())
-        cliente = Cliente.query.filter_by(email = email).first()
+        usuario = Usuario.query.filter_by(email = email).first()
 
-        if cliente:
-            if cliente.senha == senha.hexdigest():
-                login_user(cliente)
+        if usuario:
+            if usuario.senha == senha.hexdigest():
+                login_user(usuario)
             else:
                 flash(u'Senha inválida!', 'danger')
         else:
@@ -33,7 +33,7 @@ def login():
 
 @usuario_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
-    if request.method == "POST":
+    if request.method == 'POST':
         nome = request.form['nome']
         email = request.form['email']
         senha = md5((request.form['senha']).encode())
@@ -44,10 +44,10 @@ def cadastro():
         
         if senha.hexdigest() == conf_senha.hexdigest():
             try:
-                new_cliente = Cliente(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
-                db.session.add(new_cliente)
+                novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
+                db.session.add(novo_usuario)
                 db.session.commit()
-                login_user(new_cliente)
+                login_user(novo_usuario)
             except exc.SQLAlchemyError:
                 flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
         else:
@@ -59,4 +59,5 @@ def cadastro():
 @login_required
 def logout():
     logout_user()
+    
     return redirect('/produto')
