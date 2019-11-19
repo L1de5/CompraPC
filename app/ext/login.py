@@ -1,6 +1,6 @@
-from flask_login import LoginManager
-from app.models.banco.Cliente import Cliente
 from flask import redirect
+from flask_login import LoginManager
+from app.models.banco.Usuario import Usuario
 
 login_mananger = LoginManager()
 
@@ -14,4 +14,4 @@ def configure(app):
 
     @login_mananger.user_loader
     def load_user(user_id):
-        return Cliente.query.get(int(user_id))
+        return Usuario.query.get(int(user_id))

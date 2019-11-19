@@ -10,5 +10,5 @@ class Venda(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
     data = db.Column(db.DateTime, nullable = False)
-    FK_usuario_compra_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    FK_produto_compra_id = db.Column(db.Integer, db.ForeignKey('produto.id'))
+    comprador_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'))

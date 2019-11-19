@@ -15,4 +15,3 @@ class Usuario(UserMixin, db.Model):
     data_nasc = db.Column(db.Date, nullable = False)
     email_verificado = db.Column(db.Integer, nullable = False, default = 0)
     cargo = db.Column(db.String(100), default = 'cliente')
-    comprador = db.relationship('Usuario', backref = 'comprador', cascade = 'all, delete')
