@@ -30,17 +30,25 @@
                 </button>
 
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/produto/carrinho"> 
-                        Carrinho de Compras 
+                    <a class="dropdown-item" href="/produto"> 
+                        Home 
                     </a>
-
-                    <a class="dropdown-item" href="/produto/adicionar"> 
-                        Adicionar Produtos 
-                    </a>
-
-                    <a class="dropdown-item" href="#">
-                        Alguma coisa aqui
-                    </a>
+                    
+                    {% if current_user.cargo == 'cliente' %}
+                        <a class="dropdown-item" href="/produto/carrinho"> 
+                            Carrinho de Compras 
+                        </a>
+                    {% else %}
+                        <a class="dropdown-item" href="/produto/adicionar"> 
+                            Adicionar Produtos 
+                        </a>
+                        
+                        {% if current_user.cargo == 'administrador' %}
+                            <a class="dropdown-item" href="#">
+                                Cadastrar Funcionários
+                            </a>
+                        {% endif %}
+                    {% endif %}
 
                     <div class="dropdown-divider"></div>
 
@@ -69,21 +77,24 @@
                 <p class="card-text"> Quantidade restante: {{ produto.quantidade }} </p>
                 <div id="btn-acoes-produto">
                     {% if current_user.nome %} 
-                    <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-4"> 
-                        <i class="material-icons green-icon"> edit </i> 
-                    </a>
-                    <a href="/produto/addC/{{ produto.id }}"  class="btn btn-outline-dark btn-icon col-4"> 
-                        <i class="material-icons green-icon"> add_shopping_cart </i> 
-                    </a>
-                    <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-4"> 
-                        <i class="material-icons red-icon"> delete </i> 
-                    </a>
-                </div>
-                {% else %}
-                    <a data-toggle="modal" data-target="#loginModal" class="btn btn-outline-dark btn-icon col-12"> 
-                        <i class="material-icons green-icon"> add_shopping_cart </i> 
-                    </a>
-                {% endif %}
+                        {% if current_user.cargo == 'cliente' %}
+                            <a href="/produto/addC/{{ produto.id }}"  class="btn btn-outline-dark btn-icon col-4"> 
+                                <i class="material-icons green-icon"> add_shopping_cart </i> 
+                            </a>
+                        {% else %}
+                            <a href="/produto/editar/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-4"> 
+                                <i class="material-icons green-icon"> edit </i> 
+                            </a>
+
+                            <a href="/produto/excluir/{{ produto.id }}" class="btn btn-outline-dark btn-icon col-4"> 
+                                <i class="material-icons red-icon"> delete </i> 
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a data-toggle="modal" data-target="#loginModal" class="btn btn-outline-dark btn-icon col-12"> 
+                            <i class="material-icons green-icon"> add_shopping_cart </i> 
+                        </a>
+                    {% endif %}
             </div>
         </div>
 

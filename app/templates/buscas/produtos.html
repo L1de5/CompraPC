@@ -31,17 +31,21 @@
                 </button>
 
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/produto/carrinho"> 
-                        Carrinho de Compras 
-                    </a>
+                    {% if current_user.cargo == 'cliente' %}
+                        <a class="dropdown-item" href="/produto/carrinho"> 
+                            Carrinho de Compras 
+                        </a>
+                    {% else %}
+                        <a class="dropdown-item" href="/produto/adicionar"> 
+                            Adicionar Produtos 
+                        </a>
 
-                    <a class="dropdown-item" href="/produto/adicionar"> 
-                        Adicionar Produtos 
-                    </a>
-
-                    <a class="dropdown-item" href="#">
-                        Alguma coisa aqui
-                    </a>
+                        {% if current_user.cargo == 'administrador' %}
+                            <a class="dropdown-item" href="#">
+                                Cadastrar Funcionários
+                            </a>
+                        {% endif %}
+                    {% endif %}
 
                     <div class="dropdown-divider"></div>
 
