@@ -140,7 +140,7 @@ __pycache__/*
 .vscode/
 
 # Pasta de uploads
-app/static/uploads
+#app/static/uploads
 
 # Arquivo de configurações
 config.cfg
