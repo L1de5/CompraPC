@@ -15,7 +15,7 @@ class Usuario(UserMixin, db.Model):
     email = db.Column(db.String(100), nullable = False)
     senha = db.Column(db.String(100), nullable = False)
     endereco = db.Column(db.String(100), nullable = False)
-    cpf = db.Column(db.String(11), nullable = False)
+    cpf = db.Column(db.String(11), nullable = False, unique = True)
     data_nasc = db.Column(db.Date, nullable = False)
     email_verificado = db.Column(db.Integer, nullable = False, default = 0)
     cargo = db.Column(db.String(100), default = 'cliente')

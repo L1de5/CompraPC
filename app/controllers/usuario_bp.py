@@ -44,19 +44,46 @@ def cadastro():
         
         if senha.hexdigest() == conf_senha.hexdigest():
             novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
-            
-            try:
-                db.session.add(novo_usuario)
-                db.session.commit()
-                login_user(novo_usuario)
 
-                return redirect('/email/enviarverificacao')
-            except exc.SQLAlchemyError:
-                flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
+            cadastro_funcionario(novo_usuario)
         else:
             flash(u'Ocorreu um problema ao tentar cadastrar usuário, as senhas não coincidem!', 'danger')
 
     return redirect('/produto')
+
+@usuario_bp.route('/funcionario/cadastro', methods=['GET', 'POST'])
+def cadastro_funcionario():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = md5((request.form['senha']).encode())
+        conf_senha = md5((request.form['conf_senha']).encode())
+        endereco = request.form['endereco']
+        cpf = request.form['cpf']
+        data_nasc = request.form['data_nasc']
+        cargo = 'funcionario'
+        
+        if senha.hexdigest() == conf_senha.hexdigest():
+            novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc, cargo = cargo)
+            
+            cadastro_funcionario(novo_usuario)
+        else:
+            flash(u'Ocorreu um problema ao tentar cadastrar funcionário, as senhas não coincidem!', 'danger')
+
+    return redirect('/produto')
+
+def cadastro_usuario(usuario) {
+    try:
+        db.session.add(usuario)
+        db.session.commit()
+        login_user(usuario)
+
+        return redirect('/email/enviarverificacao')
+    except exc.SQLAlchemyError:
+        flash(u'Ocorreu um problema ao tentar cadastrar funcionário, tente novamente!', 'danger')
+
+        return redirect('/produto')
+}
 
 @usuario_bp.route('/logout')
 @login_required
