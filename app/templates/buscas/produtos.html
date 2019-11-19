@@ -30,16 +30,16 @@
                     <i class="material-icons green-icon"> menu </i> 
                 </button>
 
-                <div class="dropdown-menu">
+                <div class="dropdown-menu">  
                     {% if current_user.cargo == 'cliente' %}
                         <a class="dropdown-item" href="/produto/carrinho"> 
                             Carrinho de Compras 
                         </a>
-                    {% else %}
+                    {% elif current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}
                         <a class="dropdown-item" href="/produto/adicionar"> 
                             Adicionar Produtos 
                         </a>
-
+                        
                         {% if current_user.cargo == 'administrador' %}
                             <a class="dropdown-item" href="#">
                                 Cadastrar Funcionários

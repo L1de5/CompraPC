@@ -32,10 +32,10 @@
 
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="/produto"> 
-                        Home 
+                        Produtos 
                     </a>
                     
-                    {% if current_user.cargo != 'cliente' %}
+                    {% if current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}
                         <a class="dropdown-item" href="/produto/adicionar"> 
                             Adicionar Produtos 
                         </a>

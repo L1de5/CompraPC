@@ -43,11 +43,14 @@ def cadastro():
         data_nasc = request.form['data_nasc']
         
         if senha.hexdigest() == conf_senha.hexdigest():
+            novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
+            
             try:
-                novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
                 db.session.add(novo_usuario)
                 db.session.commit()
                 login_user(novo_usuario)
+
+                return redirect('/email/enviarverificacao')
             except exc.SQLAlchemyError:
                 flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
         else:

@@ -13,10 +13,6 @@ nav {
     margin-bottom: 10px;
 }
 
-.card-text {
-    text-align: justify;
-}
-
 .card {
     margin: 10px 10px;
     color: black;
@@ -155,6 +151,7 @@ nav {
 
 .card-img-top {
     max-height: 270px;
+    width: auto;
 }
 
 .navbar-brand {

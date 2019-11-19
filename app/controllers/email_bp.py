@@ -26,17 +26,20 @@ def compra(valor):
 @email_bp.route('/enviarverificacao')
 @login_required
 def verificacao(): 
-    email = current_user.email
-    token = serialize_obj.dumps(email, salt='email-confirm')
-    message = Message('Compra PC', sender='digaomartins8@gmail.com', recipients=[email])
-    link = url_for('email.confirm_email', token = token, _external = True)
-    message.body = 'Verifique seu eail clicando no link: '+link
+    if (current_user.email_verificado === 1):
+        email = current_user.email
+        token = serialize_obj.dumps(email, salt='email-confirm')
+        message = Message('Compra PC', sender='digaomartins8@gmail.com', recipients=[email])
+        link = url_for('email.confirm_email', token = token, _external = True)
+        message.body = 'Verifique seu email <a href="{}"> clicando aqui. </a>'.format(link)
 
-    try:
-        mail.send(message)
-        flash(u'Email de verificação enviado com sucesso!', 'success') 
-    except Exception:
-        flash(u'Falha ao enviar email de verificação, tente novamente!', 'danger')
+        try:
+            mail.send(message)
+            flash(u'Email de verificação enviado com sucesso!', 'success') 
+        except Exception:
+            flash(u'Falha ao enviar email de verificação, tente novamente!', 'danger')
+    else: 
+        flash(u'Email já foi verificado!', 'success')
 
     return redirect('/produto')
 
@@ -45,9 +48,22 @@ def verificacao():
 def confirm_email(token):
     try:
         email = current_user.email
-        user = Cliente.query.filter_by(email = email).first()
-        email = serialize_obj.loads(token, salt='email-confirm', max_age = 3600)
-    except SignatureExpired:
-        return '<h1> Email verificado com sucesso </h1>'
+        usuario = Cliente.query.filter_by(email = email).first()
+        usuario.email_verificado = 1
 
-    return '<h1> Email não pode ser verificado, tente novamente em outro momento! </h1>'
+        try:
+            db.session.merge(produto)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            flash(u'Email não pode ser verificado, tente novamente em outro momento!', 'danger')
+
+            return redirect('/produto')
+        
+        email = serialize_obj.loads(token, salt='email-confirm', max_age = 86400)
+
+
+        flash(u'Email verificado com sucesso!', 'success') 
+    except SignatureExpired:
+        flash(u'Email não pode ser verificado, tente novamente em outro momento!', 'danger')
+
+    return redirect('/produto')
