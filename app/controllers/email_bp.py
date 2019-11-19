@@ -26,7 +26,7 @@ def compra(valor):
 @email_bp.route('/enviarverificacao')
 @login_required
 def verificacao(): 
-    if (current_user.email_verificado === 1):
+    if (current_user.email_verificado == 1):
         email = current_user.email
         token = serialize_obj.dumps(email, salt='email-confirm')
         message = Message('Compra PC', sender='digaomartins8@gmail.com', recipients=[email])

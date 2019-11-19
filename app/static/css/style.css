@@ -32,6 +32,15 @@ nav {
     color: white;
 }
 
+#produtos1 {
+    justify-content: center;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    height: 800px;
+}
+
 #produtos {
     justify-content: center;
     overflow-y: scroll;

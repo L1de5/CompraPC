@@ -72,7 +72,7 @@ def cadastro_funcionario():
 
     return redirect('/produto')
 
-def cadastro_usuario(usuario) {
+def cadastro_usuario(usuario):
     try:
         db.session.add(usuario)
         db.session.commit()
@@ -83,7 +83,6 @@ def cadastro_usuario(usuario) {
         flash(u'Ocorreu um problema ao tentar cadastrar funcionário, tente novamente!', 'danger')
 
         return redirect('/produto')
-}
 
 @usuario_bp.route('/logout')
 @login_required

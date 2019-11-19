@@ -39,8 +39,8 @@
                         <a class="dropdown-item" href="/produto/adicionar"> 
                             Adicionar Produtos 
                         </a>
-                        
-                        {% if current_user.cargo == 'administrador' %}
+
+                        {% if current_user.cargo == 'administrador'%}
                             <a class="dropdown-item" href="#">
                                 Cadastrar Funcionários
                             </a>
@@ -74,7 +74,7 @@
         {% endif %}
     {% endwith %}
 
-    <div id="produtos">
+    <div id="produtos1">
             
         {% if produtos %}
                 {% for produto in produtos %}
