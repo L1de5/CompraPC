@@ -6,7 +6,7 @@ from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
 from app.models.banco.Produto import Produto
-from app.models.banco.Venda import Venda
+from app.models.banco.Itemvenda import Itemvenda
 from app.ext.login import *
 from app.ext.database import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from hashlib import md5
 from sqlalchemy import exc
 from uuid import uuid4
-from datetime import datetime
+from datetime import date
 
 produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
 
@@ -187,24 +187,26 @@ def comprar():
         quantidade = request.args["quantidade1"]
         print(quantidade)
     for prod in produtos:
+
         valor = valor + prod.preco
         produto = Produto.query.get(prod.id)
         if(produto.quantidade > 0):
             produto.quantidade = produto.quantidade - 1
+            venda = Itemvenda(
+                          comprador_id=cliente.id, produto_id=produto.id, preco= produto.preco)
             db.session.merge(produto)
+            db.session.add(venda)
         else:
             flash(u'Produto {} acabou de sair de estoque, infelizmente nao foi possivel completar sua compra, retire ele do carrinho para prosseguir'.format(prod.nome), 'danger')
             return redirect('/produto/carrinho')
-    venda = Venda(data = datetime.now(), comprador = cliente.id, prod_venda = produtos)
-    cliente.prod_cart = []
+        venda = []
 
     try:
-        db.session.merge(cliente)
-        db.session.add(venda)
+        cliente.prod_cart = []
         db.session.commit()
-        
         flash(u'Produto comprado com sucesso!', 'success')
     except exc.SQLAlchemyError:
+        db.session.rollback()
         flash(u'Ocorreu um problema ao tentar comprar produto, tente novamente!', 'danger')
 
     return render_template('/buscas/compra.html', valor = valor)

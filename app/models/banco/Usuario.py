@@ -2,6 +2,10 @@ from app.ext.database import db
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship, backref
+from app.models.banco.Produto import Produto
+
+carrinho = db.Table('carrinho', db.Column('id_usuario', db.Integer, db.ForeignKey(
+    'usuario.id'), primary_key=True), db.Column('id_produto', db.Integer, db.ForeignKey('produto.id'), primary_key=True))
 
 class Usuario(UserMixin, db.Model): 
     __tablename__= 'usuario'
@@ -15,3 +19,5 @@ class Usuario(UserMixin, db.Model):
     data_nasc = db.Column(db.Date, nullable = False)
     email_verificado = db.Column(db.Integer, nullable = False, default = 0)
     cargo = db.Column(db.String(100), default = 'cliente')
+    prod_cart = db.relationship(
+        'Produto', secondary=carrinho, backref='usuario')

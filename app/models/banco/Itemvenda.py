@@ -11,6 +11,7 @@ class Itemvenda(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
     data = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    preco = db.Column(db.Integer, nullable=False)
     quantidade = db.Column(db.Integer, nullable = False, default = 1)
     comprador_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'))
