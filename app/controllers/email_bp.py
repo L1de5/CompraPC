@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask_mail import Mail, Message
 from app.ext.mail import serialize_obj, mail
-from flask import Blueprint, request, url_for, redirect, flash
-from flask_login import current_user, login_required
 from app.models.banco.Usuario import Usuario
+from flask_login import current_user, login_required
+from flask import Blueprint, request, url_for, redirect, flash
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 
 email_bp = Blueprint('email', __name__, url_prefix='/email')

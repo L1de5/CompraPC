@@ -50,9 +50,11 @@ def popula_banco():
     adm = Usuario(nome = 'Cleber', email = 'admin', senha = senha1.hexdigest(), cargo = 'administrador', endereco = 'Rua dos tolos, 0', cpf = '12345678998', data_nasc = '05/05/2005')
     func = Usuario(nome = 'Cleberson', email = 'func', senha = senha2.hexdigest(), cargo = 'funcionario', endereco = 'Rua dos tolos, 2', cpf = '1234567899', data_nasc = '06/06/2006')
     cliente = Usuario(nome = 'Jefferson', email = 'jef', senha = senha3.hexdigest(), cargo = 'cliente', endereco = 'Rua dos tolos, 3', cpf = '1234567890', data_nasc = '03/03/2003')
+
     for x in range(10):
         prod = Produto(nome = 'Produto {}'.format(x+1), descricao = "Produto {} muito bom".format(x+1), preco = (x+1)*100, quantidade = 2, arquivo = "uploads/85f97bbf-384a-4958-9490-a76ce8bc7762.png")
         db.session.add(prod)
+        
     try:
         db.session.add(func)
         db.session.add(cliente)

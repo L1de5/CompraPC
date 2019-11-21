@@ -1,7 +1,8 @@
 body {
     font-family: sans-serif;
     background-color: rgba(15, 24, 1, 0.781);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
     color: white;
 }
 
@@ -17,6 +18,10 @@ nav {
     margin: 10px 10px;
     color: black;
     width: 17rem !important;
+}
+
+.form {
+    width: 450px;
 }
 
 .modal-header {
@@ -38,7 +43,6 @@ nav {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    height: 800px;
 }
 
 #produtos {
@@ -160,6 +164,7 @@ nav {
 
 .card-img-top {
     max-height: 270px;
+    max-width: 270px;
     width: auto;
 }
 

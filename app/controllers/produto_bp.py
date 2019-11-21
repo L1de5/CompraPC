@@ -1,34 +1,21 @@
 # -*- coding: utf-8 -*-
-import os
 from app import app
-from flask import render_template, request, Blueprint, redirect, flash, session, jsonify
+from flask import *
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
 from app.models.banco.Produto import Produto
-from app.models.banco.Itemvenda import Itemvenda
-from app.ext.login import *
-from app.ext.database import db
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.utils import secure_filename
-from hashlib import md5
-from sqlalchemy import exc
-from uuid import uuid4
-from datetime import date
+from flask_login import login_required, current_user
 
 produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
-
-def permitido(extencao): 
-    return extencao in ['png', 'jpg', 'jpeg']
 
 @produtos_bp.route('/')
 def listar():
     form_cadastro = CadastroForm()
     form_login = LoginForm()
-    form_add_produto = ProdutoForm()
     produtos = Produto.query.order_by(Produto.id).all()
 
-    return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login, form_add_produto = form_add_produto)
+    return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login)
 
 @produtos_bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
@@ -40,36 +27,17 @@ def adicionar():
         descricao = form_produto.descricao.data
         preco = form_produto.preco.data
         quantidade = form_produto.quantidade.data
-        arquivo = form_produto.arquivo.data
-        extencao_foto = arquivo.filename.split('.')[-1].lower()
-        novo_nome_foto = uuid4()
-        is_permitido = permitido(extencao_foto)
-         
-        if is_permitido:
-            novo_nome_foto = str(novo_nome_foto) + '.' + extencao_foto
-            foto = secure_filename(arquivo.filename)
-            diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
-            diretorio_novo = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome_foto)
+        foto = form_produto.arquivo.data
+        produto = Produto(nome = nome, descricao = descricao, preco = preco, quantidade = quantidade)
 
-            arquivo.save(diretorio)
-            os.rename(diretorio, diretorio_novo)
+        produto_foi_salvo = Produto.salvar(produto, foto)
 
-            produto = Produto(nome = nome, descricao = descricao, preco = preco, quantidade = quantidade, arquivo = 'uploads/'+novo_nome_foto)
+        if produto_foi_salvo:
+            flash(u'Produto adicionado com sucesso!', 'success')
 
-            try:
-                flash(u'Produto adicionado com sucesso!', 'success')
-                db.session.add(produto)
-                db.session.commit()
-
-                return redirect('/produto')
-            except exc.SQLAlchemyError:
-                flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
-
-                return redirect('/produto')
+            return redirect('/produto')
         else:
             flash(u'Ocorreu um problema ao tentar adicionar produto, tente novamente!', 'danger')
-
-            return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
     return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
@@ -86,41 +54,24 @@ def editar(id):
         form_produto.quantidade.data = produto.quantidade
         
         if request.method == 'POST':
-            arquivo = form_produto.arquivo.data
-            extencao_foto = arquivo.filename.split('.')[-1].lower()
-            novo_nome_foto = uuid4()
-            is_permitido = permitido(extencao_foto)
+            foto = form_produto.arquivo.data
+            produto = Produto.query.filter_by(id=id).first()
+            produto.nome = request.form['nome']
+            produto.descricao = request.form['descricao']
+            produto.preco = request.form['preco']
+            produto.quantidade = request.form['quantidade']
 
-            if is_permitido:
-                novo_nome_foto = str(novo_nome_foto) + '.' + extencao_foto
-                foto = produto.arquivo.split('/')[-1]
-                diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
-                diretorio_novo = os.path.join(
-                    app.config['UPLOAD_FOLDER'], novo_nome_foto)
-                os.remove(diretorio)
-                arquivo.save(diretorio_novo)
-                produto.arquivo = 'uploads/'+novo_nome_foto
+            produto_foi_salvo = Produto.salvar(produto, foto)
 
-            try:
-                produto = Produto.query.filter_by(id=id).first()
-                produto.nome = request.form['nome']
-                produto.descricao = request.form['descricao']
-                produto.preco = request.form['preco']
-                produto.quantidade = request.form['quantidade']
-
-                db.session.merge(produto)
-                db.session.commit()
-
+            if produto_foi_salvo:
                 flash(u'Produto alterado com sucesso!', 'success')
 
                 return redirect('/produto')
-            except exc.SQLAlchemyError:
-                flash(
-                    u'Ocorreu um problema ao tentar alterar produto, tente novamente!', 'danger')
+            else:
+                flash(u'Ocorreu um problema ao tentar alterar produto, tente novamente!', 'danger')
 
-                return redirect('/produto/editar/' + id)
+                return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
         
-
         return render_template('adicionarproduto.html', form_produto = form_produto, titulo='Produto')
 
 @produtos_bp.route('/detalhe/<id>', methods = ['GET', 'POST'])
@@ -129,103 +80,12 @@ def detalhe(id):
     form_login = LoginForm()
     produto = Produto.query.get(id)
     
-    return render_template('buscas/detalhe_produto.html', produto=produto,  form_cadastro = form_cadastro, form_login = form_login)
-
-
-@produtos_bp.route('/carrinho', methods=['GET', 'POST'])
-def carrinho():
-    cliente = current_user
-    produtos = cliente.prod_cart
-    return render_template('buscas/carrinho.html', produtos = produtos)
-
-
-@produtos_bp.route('/removeC/<id>', methods=['GET', 'POST'])
-@login_required
-def removeCart(id):
-    cliente = current_user
-    produto = Produto.query.get(id)
-    cliente.prod_cart.remove(produto)
-
-    try:
-        db.session.merge(cliente)
-        db.session.commit()
-        
-        flash(u'Produto removido do carrinho com sucesso!', 'success')
-    except exc.SQLAlchemyError:
-        flash(u'Ocorreu um problema ao tentar remover produto do carrinho, tente novamente!', 'danger')
-
-    return redirect('/produto/carrinho')
-
-@produtos_bp.route('/addC/<id>', methods = ['GET', 'POST'])
-@login_required
-def addCart(id):
-    cliente = current_user
-    produto = Produto.query.get(id)
-
-    if produto in cliente.prod_cart:
-        flash(u'Produto já se encontra no carrinho!', 'danger')
-    else:
-        if (produto.quantidade > 0):
-            cliente.prod_cart.append(produto)
-            db.session.merge(cliente)
-            db.session.commit()
-
-            flash(u'Produto adicionado ao carrinho com sucesso!', 'success')
-        else:
-            flash(u'Produto não esta mais em estoque', 'danger')
-
-    return redirect('/produto/')
-
-
-@produtos_bp.route('/comprar', methods=['GET', 'POST'])
-@login_required
-def comprar():
-    cliente = current_user
-    produtos = cliente.prod_cart
-    valor = 0
-    if request.method == 'POST':
-        quantidade = request.args["quantidade1"]
-        print(quantidade)
-    for prod in produtos:
-
-        valor = valor + prod.preco
-        produto = Produto.query.get(prod.id)
-        if(produto.quantidade > 0):
-            produto.quantidade = produto.quantidade - 1
-            venda = Itemvenda(
-                          comprador_id=cliente.id, produto_id=produto.id, preco= produto.preco)
-            db.session.merge(produto)
-            db.session.add(venda)
-        else:
-            flash(u'Produto {} acabou de sair de estoque, infelizmente nao foi possivel completar sua compra, retire ele do carrinho para prosseguir'.format(prod.nome), 'danger')
-            return redirect('/produto/carrinho')
-        venda = []
-
-    try:
-        cliente.prod_cart = []
-        db.session.commit()
-        flash(u'Produto comprado com sucesso!', 'success')
-    except exc.SQLAlchemyError:
-        db.session.rollback()
-        flash(u'Ocorreu um problema ao tentar comprar produto, tente novamente!', 'danger')
-
-    return render_template('/buscas/compra.html', valor = valor)
+    return render_template('buscas/detalhe_produto.html', produto = produto,  form_cadastro = form_cadastro, form_login = form_login)
  
 @produtos_bp.route('/excluir/<id>', methods = ['GET', 'POST'])
 @login_required
 def excluir(id):
-    try:
-        produto = Produto.query.get(id)
-        foto = produto.arquivo.split('/')[-1]
-        diretorio = os.path.join(app.config['UPLOAD_FOLDER'], foto)
-        os.remove(diretorio)
-        db.session.delete(produto)
-        db.session.commit()
-        
-        flash(u'Produto deletado com sucesso!', 'success')
-    except exc.SQLAlchemyError:
-        flash(u'Ocorreu um problema ao tentar deletar produto, tente novamente!', 'danger')
+    produto = Produto.query.get(id)
+    Produto.excluir(produto)
 
     return redirect('/produto/')
-
-

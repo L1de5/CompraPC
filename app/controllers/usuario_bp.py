@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from app import app
-from flask import render_template, request, Blueprint, redirect, flash
-from app.models.form.cadastro_usuario import CadastroForm
-from app.models.form.login_usuario import LoginForm
+from flask import *
 from app.models.banco.Usuario import Usuario
-from app.ext.database import db
+from app.models.form.login_usuario import LoginForm
+from app.models.form.cadastro_usuario import CadastroForm
 from flask_login import login_user, login_required, logout_user
 from hashlib import md5
+from app.ext.database import db
 from sqlalchemy import exc
 
 usuario_bp = Blueprint('usuario', __name__, url_prefix='/usuario')
@@ -44,14 +44,15 @@ def cadastro():
         
         if senha.hexdigest() == conf_senha.hexdigest():
             novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
-
-            cadastro_funcionario(novo_usuario)
+            
+            cadastro_usuario(novo_usuario)
         else:
             flash(u'Ocorreu um problema ao tentar cadastrar usuário, as senhas não coincidem!', 'danger')
 
     return redirect('/produto')
 
 @usuario_bp.route('/funcionario/cadastro', methods=['GET', 'POST'])
+@login_required
 def cadastro_funcionario():
     if request.method == 'POST':
         nome = request.form['nome']
@@ -66,23 +67,15 @@ def cadastro_funcionario():
         if senha.hexdigest() == conf_senha.hexdigest():
             novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc, cargo = cargo)
             
-            cadastro_funcionario(novo_usuario)
+            cadastro_usuario(novo_usuario)
         else:
             flash(u'Ocorreu um problema ao tentar cadastrar funcionário, as senhas não coincidem!', 'danger')
 
     return redirect('/produto')
 
 def cadastro_usuario(usuario):
-    try:
-        db.session.add(usuario)
-        db.session.commit()
-        login_user(usuario)
-
-        return redirect('/email/enviarverificacao')
-    except exc.SQLAlchemyError:
-        flash(u'Ocorreu um problema ao tentar cadastrar funcionário, tente novamente!', 'danger')
-
-        return redirect('/produto')
+    Usuario.salvar(usuario)
+    login_user(usuario)
 
 @usuario_bp.route('/logout')
 @login_required

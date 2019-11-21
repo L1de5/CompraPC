@@ -8,9 +8,10 @@ class ProdutoForm(Form):
         'type' : 'number',
         'step' : '0.01'
     }
+    
     nome = StringField('Nome', validators=[DataRequired(), Length(min = 3, max = 240)])
     descricao = TextAreaField('Descrição', validators=[DataRequired(), Length(max = 400)])
     preco = DecimalField('Preço',  validators=[DataRequired(), NumberRange(min = 0)],render_kw=style)
     quantidade = IntegerField('Quantidade', validators=[DataRequired(), NumberRange(min = 0)])
-    arquivo = FileField('Foto do Produto')
+    arquivo = FileField('Foto do Produto', validators=[DataRequired()])
     submit = SubmitField('Adicionar')
