@@ -16,7 +16,7 @@ class Produto(db.Model):
     preco = db.Column(db.Float, nullable = False)
     quantidade = db.Column(db.Integer, nullable = False)
     arquivo = db.Column(db.String(400), nullable = False)
-    item_vendas = db.relationship('Itemvenda', backref='produto', lazy='select')
+    item_vendas = db.relationship('ItemVenda', backref='produto', lazy='select')
   
     @staticmethod
     def salvar(produto, foto):
@@ -39,7 +39,6 @@ class Produto(db.Model):
         except exc.SQLAlchemyError:
             return False
         
-
     @staticmethod
     def excluir(produto):
         try:
@@ -59,18 +58,14 @@ class Produto(db.Model):
 
         return redirect('/produto/')
             
+    @staticmethod
+    def get_dict_produto(id):
+        produto = Produto.query.get(id)
+
+        return produto.to_dict()
+
     def to_dict(self):
         dictionary = self.__dict__
         dictionary.pop('_sa_instance_state')
-
-        return dictionary
-
-    def to_json(dictionary):
-        json = json.dumps(dictionary)
-
-        return json
-
-    def dict_from_json(prod_json):
-        dictionary = json.loads(prod_json)
 
         return dictionary

@@ -19,15 +19,14 @@ class Usuario(UserMixin, db.Model):
     cargo = db.Column(db.String(100), default = 'cliente')
     comprador_vendas = db.relationship('Venda', backref='comprador', lazy='select')
 
-
     @staticmethod
     def salvar(usuario):
         try:
             db.session.add(usuario)
             db.session.commit()
 
-            return redirect('/email/enviarverificacao')
+            return True
         except exc.SQLAlchemyError:
             flash(u'Ocorreu um problema ao tentar cadastrar funcionário, tente novamente!', 'danger')
         
-        return redirect('/produto')
+            return False

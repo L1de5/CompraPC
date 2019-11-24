@@ -32,7 +32,7 @@
 
                 <div class="dropdown-menu">  
                     {% if current_user.cargo == 'cliente' %}
-                        <a class="dropdown-item" href="/produto/carrinho"> 
+                        <a class="dropdown-item" href="/carrinho"> 
                             Carrinho de Compras 
                         </a>
                     {% elif current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}

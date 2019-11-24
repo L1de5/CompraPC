@@ -78,7 +78,7 @@
                 <div id="btn-acoes-produto">
                     {% if current_user.nome %} 
                         {% if current_user.cargo == 'cliente' %}
-                            <a href="/produto/addC/{{ produto.id }}"  class="btn btn-outline-dark btn-icon col-4"> 
+                            <a href="/carrinho/adicioanaritem/{{ produto.id }}"  class="btn btn-outline-dark btn-icon col-4"> 
                                 <i class="material-icons green-icon"> add_shopping_cart </i> 
                             </a>
                         {% else %}

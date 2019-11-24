@@ -75,7 +75,7 @@
 
 
     <div class="container-carrinho">
-        {% if produtos %}
+        {% if itens %}
             <table class="carrinho-compras">
                 <thead>
                     <tr>
@@ -87,22 +87,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for produto in produtos %}
+                    {% for item in itens %}
                         <tr>
                             <td scope="row">
-                                <img src="{{ url_for('static', filename=produto.arquivo) }}" class="foto-prod-carrinho" alt="Foto top aqui">
+                                <img src="{{ url_for('static', filename=item['produto'].arquivo) }}" class="foto-prod-carrinho" alt="Foto top aqui">
                             </td>
                             <td class="overflow-text">
-                                {{ produto.nome }}
+                                {{ item['produto']['nome'] }}
                             </td>
-                            <td class="overflow-text">{{ produto.descricao }} </td>
-                            <td> R$ {{ produto.preco }}</td>
+                            <td class="overflow-text">{{ item['produto']['descricao'] }} </td>
+                            <td> R$ {{ item['produto']['preco'] }}</td>
                             <td> 
-                                1
-                                <!--<input type="number" class="inpt-qnt" name="quantidade1" id="quantidade1" value="1" min="1">-->
+                                <input type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="{{ item['quantidade'] }}" min="1" max="{{ item['produto']['quantidade'] }}">
                             </td>
                             <td>
-                                <a href="/produto/removeC/{{produto.id}}" class="btn btn-outline-dark btn-icon"> 
+                                <a href="/carrinho/excluiritem/{{ item['produto']['id'] }}" class="btn btn-outline-dark btn-icon"> 
                                     <i class="material-icons red-icon"> delete </i> 
                                 </a>
                             </td>

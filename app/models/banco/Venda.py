@@ -1,9 +1,9 @@
 from sqlalchemy import exc
 from flask_sqlalchemy import SQLAlchemy
 from app.ext.database import db
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import *
 from sqlalchemy.orm import relationship, backref
-from app.models.banco.Itemvenda import Itemvenda
+from app.models.banco.ItemVenda import ItemVenda
 
 class Venda(db.Model): 
     __tablename__ = 'venda'

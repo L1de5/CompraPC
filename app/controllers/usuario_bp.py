@@ -6,14 +6,11 @@ from app.models.form.login_usuario import LoginForm
 from app.models.form.cadastro_usuario import CadastroForm
 from flask_login import login_user, login_required, logout_user
 from hashlib import md5
-from app.ext.database import db
-from sqlalchemy import exc
 
 usuario_bp = Blueprint('usuario', __name__, url_prefix='/usuario')
 
 @usuario_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    db.create_all()
     form = LoginForm()
     
     if form.validate_on_submit():
@@ -74,8 +71,14 @@ def cadastro_funcionario():
     return redirect('/produto')
 
 def cadastro_usuario(usuario):
-    Usuario.salvar(usuario)
-    login_user(usuario)
+    usuario_foi_cadastrado = Usuario.salvar(usuario)
+
+    if usuario_foi_cadastrado:
+        login_user(usuario)
+
+        return redirect('/email/enviarverificacao')
+    else: 
+        return redirect('/produto')
 
 @usuario_bp.route('/logout')
 @login_required
