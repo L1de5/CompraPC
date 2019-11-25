@@ -17,8 +17,11 @@ class CarrinhoCompras():
 
         if indice_item:
             self._itens.pop(indice_item)
+        else:
+            return False
 
         self.set_carrinho_on_session()
+        return True
 
     def adicionar_item(self, dict_item):
         indice_item = self.existe_item(dict_item['produto'])

@@ -22,11 +22,14 @@ class Usuario(UserMixin, db.Model):
     @staticmethod
     def salvar(usuario):
         try:
-            db.session.add(usuario)
+            if usuario.id:
+                db.session.merge(usuario)
+            else:
+                db.session.add(usuario)
+
             db.session.commit()
 
             return True
-        except exc.SQLAlchemyError:
-            flash(u'Ocorreu um problema ao tentar cadastrar funcionário, tente novamente!', 'danger')
-        
+        except exc.SQLAlchemyError:        
             return False
+

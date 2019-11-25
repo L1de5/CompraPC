@@ -1,5 +1,4 @@
 import os
-from flask import current_app
 from flask import *
 from uuid import uuid4
 from werkzeug.utils import secure_filename

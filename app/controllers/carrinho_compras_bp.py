@@ -37,8 +37,11 @@ def adicionar_item(id):
 @login_required
 def excluir(id):
     produto_dict = Produto.get_dict_produto(id)
-    carrinho.remover_item(produto_dict)
-    flash(u'Produto removido do carrinho com sucesso!', 'success')
+    
+    if carrinho.remover_item(produto_dict):
+        flash(u'Produto removido do carrinho com sucesso!', 'success')
+    else:
+        flash(u'O produto não se encontra no carrinho!', 'danger')
 
     return redirect('/produto')
 

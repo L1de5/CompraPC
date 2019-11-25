@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from app import app
 from flask import *
+from app.models.Email import Email
 from app.models.banco.Usuario import Usuario
 from app.models.form.login_usuario import LoginForm
 from app.models.form.cadastro_usuario import CadastroForm
@@ -74,11 +75,18 @@ def cadastro_usuario(usuario):
     usuario_foi_cadastrado = Usuario.salvar(usuario)
 
     if usuario_foi_cadastrado:
+        flash(u'Usuário cadastrado com sucesso!', 'success') 
         login_user(usuario)
 
-        return redirect('/email/enviarverificacao')
+        if Email.send_verificacao_email(usuario.email):
+            flash(u'Email de verificação enviado com sucesso!', 'success') 
+        else:  
+            flash(u'Falha ao enviar email de verificação, tente novamente em outro momento!', 'danger')
+
     else: 
-        return redirect('/produto')
+        flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
+
+    return redirect('/produto')
 
 @usuario_bp.route('/logout')
 @login_required
