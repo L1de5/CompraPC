@@ -5,7 +5,8 @@ from app.models.Email import Email
 from app.models.banco.Usuario import Usuario
 from app.models.form.login_usuario import LoginForm
 from app.models.form.cadastro_usuario import CadastroForm
-from flask_login import login_user, login_required, logout_user
+from app.models.form.editar_usuario import EditarForm
+from flask_login import login_user, login_required, logout_user, current_user
 from hashlib import md5
 
 usuario_bp = Blueprint('usuario', __name__, url_prefix='/usuario')
@@ -31,6 +32,7 @@ def login():
 
 @usuario_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
+    form = CadastroForm()
     if request.method == 'POST':
         nome = request.form['nome']
         email = request.form['email']
@@ -52,6 +54,8 @@ def cadastro():
 @usuario_bp.route('/funcionario/cadastro', methods=['GET', 'POST'])
 @login_required
 def cadastro_funcionario():
+    form = CadastroForm()
+
     if request.method == 'POST':
         nome = request.form['nome']
         email = request.form['email']
@@ -66,17 +70,20 @@ def cadastro_funcionario():
             novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc, cargo = cargo)
             
             cadastro_usuario(novo_usuario)
+            return redirect("/produto")
         else:
             flash(u'Ocorreu um problema ao tentar cadastrar funcionário, as senhas não coincidem!', 'danger')
 
-    return redirect('/produto')
+    return render_template('adicionarfuncionario.html', form=form, titulo='Adicionar Funcionario')
 
 def cadastro_usuario(usuario):
     usuario_foi_cadastrado = Usuario.salvar(usuario)
 
     if usuario_foi_cadastrado:
         flash(u'Usuário cadastrado com sucesso!', 'success') 
-        login_user(usuario)
+        
+        if usuario.cargo == "cliente":
+            login_user(usuario)
 
         if Email.send_verificacao_email(usuario.email):
             flash(u'Email de verificação enviado com sucesso!', 'success') 
@@ -87,6 +94,45 @@ def cadastro_usuario(usuario):
         flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
 
     return redirect('/produto')
+
+
+@usuario_bp.route('/editar', methods=['GET', 'POST'])
+@login_required
+def editar():
+    id = current_user.id
+    cliente = Usuario.query.filter_by(id=id).first()
+
+    if cliente:
+        form_cliente = EditarForm()
+        form_cliente.nome.data = cliente.nome
+        form_cliente.email.data = cliente.email
+        form_cliente.senha.data = cliente.senha
+        form_cliente.endereco.data = cliente.endereco
+        form_cliente.cpf.data = cliente.cpf
+        form_cliente.data_nasc.data = cliente.data_nasc
+
+        if request.method == 'POST':
+            cliente = Usuario.query.filter_by(id=id).first()
+            cliente.nome = request.form['nome']
+            cliente.email = request.form['email']
+            cliente.senha = request.form['senha']
+            cliente.endereco = request.form['endereco']
+            cliente.cpf = request.form['cpf']
+            cliente.data_nasc = request.form['data_nasc']
+
+            cliente_foi_salvo = Usuario.salvar(cliente)
+
+            if cliente_foi_salvo:
+                flash(u'Usuario alterado com sucesso!', 'success')
+
+                return redirect('/produto')
+            else:
+                flash(
+                    u'Ocorreu um problema ao tentar alterar informacoes, tente novamente!', 'danger')
+
+                return render_template('adicionarfuncionario.html', form=form_cliente, titulo='Editar')
+
+        return render_template('adicionarfuncionario.html', form = form_cliente, titulo='Editar')
 
 @usuario_bp.route('/logout')
 @login_required

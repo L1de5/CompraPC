@@ -32,6 +32,9 @@
 
                 <div class="dropdown-menu">  
                     {% if current_user.cargo == 'cliente' %}
+                        <a class="dropdown-item" href="/usuario/editar"> 
+                            Editar perfil 
+                        </a>
                         <a class="dropdown-item" href="/carrinho"> 
                             Carrinho de Compras 
                         </a>
@@ -41,7 +44,7 @@
                         </a>
 
                         {% if current_user.cargo == 'administrador'%}
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/usuario/funcionario/cadastro">
                                 Cadastrar Funcionários
                             </a>
                         {% endif %}
