@@ -4,6 +4,7 @@ from app.ext.database import db
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, backref
 from app.models.banco.ItemVenda import ItemVenda
+from datetime import datetime
 
 class Venda(db.Model): 
     __tablename__ = 'venda'

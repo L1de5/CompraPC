@@ -49,7 +49,6 @@ def excluir(id):
 
     return redirect('/produto')
 
-
 @carrinho_compras_bp.route('/comprar', methods=['GET', 'POST'])
 @login_required
 def comprar():
@@ -60,16 +59,16 @@ def comprar():
     for item in item:
         produto = Produto.query.get(item['produto']['id'])
         produto.quantidade = produto.quantidade - item['quantidade']
-        Produto.editar(produto)
+        Produto.salvar(produto)
         item_venda.data = datetime.now()
         item_venda.preco = item['produto']['preco']
         item_venda.quantidade = item['quantidade']
         item_venda.produto_id = item['produto']['id']
-        #venda.data = datetime.now()
-        #venda.comprador_id = current_user.id
-        #venda.item_venda_id = item_venda.id
-        #db.session.add(venda)
         db.session.add(item_venda)
+        venda.data = datetime.now()
+        venda.comprador_id = current_user.id
+        venda.item_venda_id = item_venda.id
+        db.session.add(venda)
         db.session.commit()
-    #queria limpar o carrinho, mas n'ao consegui, se limpar, nem vai precisar verificar antes de comprar se ainda tem o item no estoquecarrinho.__init__()
+    carrinho.limpar()
     return render_template("/buscas/compra.html", valor = valor_total)
