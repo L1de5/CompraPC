@@ -12,6 +12,9 @@ class CarrinhoCompras():
     def get_itens(self):
         return self._itens
 
+    def limpar_carrinho(self):
+        self._itens = []
+
     def remover_item(self, dict_item):
         indice_item = self.existe_item(dict_item)
 
