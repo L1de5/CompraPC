@@ -57,20 +57,17 @@ class Produto(db.Model):
     def excluir(produto):
         try:
             foto_removida = Foto.excluir(produto.arquivo)
-            print(foto_removida)
-        
+
             if foto_removida:
                 db.session.delete(produto)
                 db.session.commit()
                 
-                flash(u'Produto deletado com sucesso!', 'success')
+                return True
             else:
-                flash(u'Ocorreu um problema ao tentar deletar produto, tente novamente!', 'danger')
+                return False
 
         except exc.SQLAlchemyError:
-            flash(u'Ocorreu um problema ao tentar deletar produto, tente novamente!', 'danger')
-
-        return redirect('/produto/')
+            return False
             
     @staticmethod
     def get_dict_produto(id):

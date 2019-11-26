@@ -56,27 +56,30 @@ def cadastro():
 @usuario_bp.route('/funcionario/cadastro', methods=['GET', 'POST'])
 @login_required
 def cadastro_funcionario():
-    form = CadastroForm()
+    if current_user.cargo == 'administrador':
+        form = CadastroForm()
 
-    if request.method == 'POST':
-        nome = request.form['nome']
-        email = request.form['email']
-        senha = md5((request.form['senha']).encode())
-        conf_senha = md5((request.form['conf_senha']).encode())
-        endereco = request.form['endereco']
-        cpf = request.form['cpf']
-        data_nasc = request.form['data_nasc']
-        cargo = 'funcionario'
-        
-        if senha.hexdigest() == conf_senha.hexdigest():
-            novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc, cargo = cargo)
+        if request.method == 'POST':
+            nome = request.form['nome']
+            email = request.form['email']
+            senha = md5((request.form['senha']).encode())
+            conf_senha = md5((request.form['conf_senha']).encode())
+            endereco = request.form['endereco']
+            cpf = request.form['cpf']
+            data_nasc = request.form['data_nasc']
+            cargo = 'funcionario'
             
-            cadastro_usuario(novo_usuario)
-            return redirect("/produto")
-        else:
-            flash(u'Ocorreu um problema ao tentar cadastrar funcionário, as senhas não coincidem!', 'danger')
+            if senha.hexdigest() == conf_senha.hexdigest():
+                novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc, cargo = cargo)
+                
+                cadastro_usuario(novo_usuario)
+                return redirect("/produto")
+            else:
+                flash(u'Ocorreu um problema ao tentar cadastrar funcionário, as senhas não coincidem!', 'danger')
 
-    return render_template('adicionarfuncionario.html', form=form, titulo='Adicionar Funcionario')
+        return render_template('adicionarfuncionario.html', form=form, titulo='Adicionar Funcionario')
+    else:
+        return redirect('/produto')
 
 def cadastro_usuario(usuario):
     usuario_foi_cadastrado = Usuario.salvar(usuario)
@@ -137,6 +140,30 @@ def editar_usuario():
             return render_template('adicionarfuncionario.html', form=form, titulo='Editar')
 
     return render_template('adicionarfuncionario.html', form = form, titulo='Editar')
+
+@usuario_bp.route('/deletarconta')
+@login_required
+def excluir_conta(id = False):
+    id_usuario = current_user.id
+
+    if Usuario.excluir(id_usuario):
+        logout_user()
+        flash(u'Sua conta foi excluida com sucesso!', 'success')
+    else:
+        flash(u'Falha ao excluir sua conta!', 'danger')
+    
+    return redirect('/produto')
+
+@usuario_bp.route('/deletarconta/<id>')
+@login_required
+def excluir_conta_outro_user(id = False):
+    if id and current_user.cargo == 'administrador':
+        id_usuario = id
+    else:
+        flash(u'Você não tem permissão para excluir contas de terceiros!', 'danger')
+    
+        return redirect('/produto')
+
 
 @usuario_bp.route('/logout')
 @login_required

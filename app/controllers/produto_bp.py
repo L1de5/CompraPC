@@ -93,6 +93,10 @@ def detalhe(id):
 @login_required
 def excluir(id):
     produto = Produto.query.get(id)
-    Produto.excluir(produto)
+    
+    if Produto.excluir(produto):
+        flash(u'Produto deletado com sucesso!', 'success')
+    else:
+        flash(u'Ocorreu um problema ao tentar deletar produto, tente novamente!', 'danger')
 
     return redirect('/produto/')

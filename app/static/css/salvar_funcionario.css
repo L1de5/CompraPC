@@ -1,0 +1,9 @@
+body {
+    overflow-y: hidden;
+}
+
+#btn-excluir-conta {
+    margin-top: 10px;
+    width: 450px;
+    padding: 10px;
+}

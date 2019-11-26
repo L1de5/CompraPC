@@ -33,3 +33,14 @@ class Usuario(UserMixin, db.Model):
         except exc.SQLAlchemyError:        
             return False
 
+    @staticmethod
+    def excluir(id):
+        try:
+            usuario = Usuario.query.get(id)
+            db.session.delete(usuario)
+            db.session.commit()
+
+            return True
+        except exc.SQLAlchemyError:        
+            return False
+
