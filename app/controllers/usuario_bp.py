@@ -97,10 +97,18 @@ def cadastro_usuario(usuario):
 
     return redirect('/produto')
 
+@usuario_bp .route('/funcionario/listar', methods=['GET'])
+@login_required
+def listar():
+    if current_user.cargo == 'administrador':
+        funcionarios = Usuario.query.filter_by(cargo='funcionario')
+
+    return render_template('buscas/funcionarios.html', funcionarios = funcionarios)
+
 @usuario_bp.route('/editar', methods=['GET', 'POST'])
 @login_required
 def editar_usuario():
-    form = CadastroForm()
+    form = EditarForm()
 
     form.nome.data = current_user.nome
     form.email.data = current_user.email
@@ -140,6 +148,59 @@ def editar_usuario():
             return render_template('adicionarfuncionario.html', form=form, titulo='Editar')
 
     return render_template('adicionarfuncionario.html', form = form, titulo='Editar')
+
+@usuario_bp.route('/editar/<id>', methods=['GET', 'POST'])
+def editar_funcionario(id = False):
+    form = EditarForm()
+    usuario = Usuario.query.get(id)
+
+    if current_user.cargo == 'administrador':
+        if usuario:
+            form.nome.data = usuario.nome
+            form.email.data = usuario.email
+            form.endereco.data = usuario.endereco
+            form.cpf.data = usuario.cpf
+            form.data_nasc.data = usuario.data_nasc
+
+            if request.method == 'POST':
+                usuario.nome = request.form['nome']
+                usuario.email = request.form['email']
+                usuario.endereco = request.form['endereco']
+                usuario.cpf = request.form['cpf']
+                usuario.data_nasc = request.form['data_nasc']
+                senha = request.form['senha']
+                conf_senha = request.form['conf_senha']
+
+                if senha.strip() and conf_senha.strip():
+                    senha_md5 = md5(senha.encode())
+                    conf_senha_md5 = md5(conf_senha.encode())
+
+                    if senha_md5.hexdigest() == conf_senha_md5.hexdigest():
+                        usuario.senha = senha_md5.hexdigest()
+                    else:
+                        flash(u'Ocorreu um problema ao tentar alterar funcionário, as senhas não coincidem!', 'danger')
+
+                usuario_foi_salvo = Usuario.salvar(usuario)
+
+                if usuario_foi_salvo:
+                    flash(u'Funcionário alterado com sucesso!', 'success')
+
+                    return redirect('/produto')
+                else:
+                    flash(u'Ocorreu um problema ao tentar alterar informacoes, tente novamente!', 'danger')
+
+                    return render_template('adicionarfuncionario.html', form=form, titulo='Editar')
+        
+        else:
+            flash(u'Ocorreu um problema ao tentar buscar o usuário, tente novamente!', 'danger')
+
+            return redirect('/funcionario/listar')
+
+        return render_template('adicionarfuncionario.html', form = form, titulo='Editar')
+    else:
+        flash(u'Você não tem permissão para acessar esta rota!', 'danger')
+
+        return redirect('/funcionario/listar')
 
 @usuario_bp.route('/deletarconta')
 @login_required

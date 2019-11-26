@@ -71,51 +71,36 @@
 
 
     <div class="container-carrinho">
-        {% if itens %}
+        {% if funcionarios %}
             <table class="carrinho-compras">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Nome</th>
-                        <th scope="col">Descrição</th>
-                        <th scope="col">Preço</th>
-                        <th scope="col">Quantidade</th>
+                        <th scope="col">Cargo</th>
+                        <th scope="col">E-mail</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in itens %}
+                    {% for funcionario in funcionarios %}
                         <tr>
-                            <td scope="row">
-                                <img src="{{ url_for('static', filename=item['produto'].arquivo) }}" class="foto-prod-carrinho" alt="Foto top aqui">
                             </td>
                             <td class="overflow-text">
-                                {{ item['produto']['nome'] }}
+                                {{ funcionario.nome }}
                             </td>
-                            <td class="overflow-text">{{ item['produto']['descricao'] }} </td>
-                            <td> R$ {{ item['produto']['preco'] }}</td>
+                            <td class="overflow-text">{{ funcionario.cargo }} </td>
+                            <td> {{ funcionario.email }}</td>
                             <td> 
-                                <input data-index="{{item['produto']['id']}}" type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="{{ item['quantidade'] }}" min="1" max="{{ item['produto']['quantidade'] }}">
+                                <a href="/usuario/editar/{{ funcionario.id }}" class="btn btn-outline-dark btn-icon"> 
+                                    <i class="material-icons green-icon"> edit </i> 
+                                </a>
                             </td>
-                            <td>
-                                <a href="/carrinho/excluiritem/{{ item['produto']['id'] }}" class="btn btn-outline-dark btn-icon"> 
+                            <td> 
+                                <a href="/usuario/deletarconta/{{ funcionario.id }}" class="btn btn-outline-dark btn-icon"> 
                                     <i class="material-icons red-icon"> delete </i> 
                                 </a>
                             </td>
                         </tr>
                     {% endfor %}
-                    
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#confirmarModal">
-                                Comprar
-                            </button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>   
         {% else %}
