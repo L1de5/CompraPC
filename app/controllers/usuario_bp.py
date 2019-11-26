@@ -113,26 +113,29 @@ def editar_usuario():
         usuario.endereco = request.form['endereco']
         usuario.cpf = request.form['cpf']
         usuario.data_nasc = request.form['data_nasc']
-        senha = md5((request.form['senha']).encode())
-        conf_senha = md5((request.form['conf_senha']).encode())
+        senha = request.form['senha']
+        conf_senha = request.form['conf_senha']
 
-        if senha.hexdigest() == conf_senha.hexdigest():
-            if senha.strip():
-                usuario.senha = senha
+        if senha.strip() and conf_senha.strip():
+            senha_md5 = md5(senha.encode())
+            conf_senha_md5 = md5(conf_senha.encode())
 
-            usuario_foi_salvo = Usuario.salvar(usuario)
-
-            if usuario_foi_salvo:
-                flash(u'Usuario alterado com sucesso!', 'success')
-
-                return redirect('/produto')
+            if senha_md5.hexdigest() == conf_senha_md5.hexdigest():
+                usuario.senha = senha_md5.hexdigest()
             else:
-                flash(
-                    u'Ocorreu um problema ao tentar alterar informacoes, tente novamente!', 'danger')
+                flash(u'Ocorreu um problema ao tentar alterar funcionário, as senhas não coincidem!', 'danger')
 
-                return render_template('adicionarfuncionario.html', form=form, titulo='Editar')
+        usuario_foi_salvo = Usuario.salvar(usuario)
+
+        if usuario_foi_salvo:
+            flash(u'Usuario alterado com sucesso!', 'success')
+
+            return redirect('/produto')
         else:
-            flash(u'Ocorreu um problema ao tentar alterar funcionário, as senhas não coincidem!', 'danger')
+            flash(
+                u'Ocorreu um problema ao tentar alterar informacoes, tente novamente!', 'danger')
+
+            return render_template('adicionarfuncionario.html', form=form, titulo='Editar')
 
     return render_template('adicionarfuncionario.html', form = form, titulo='Editar')
 
