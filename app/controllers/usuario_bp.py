@@ -33,14 +33,15 @@ def login():
 @usuario_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
     form = CadastroForm()
-    if request.method == 'POST':
-        nome = request.form['nome']
-        email = request.form['email']
-        senha = md5((request.form['senha']).encode())
-        conf_senha = md5((request.form['conf_senha']).encode())
-        endereco = request.form['endereco']
-        cpf = request.form['cpf']
-        data_nasc = request.form['data_nasc']
+
+    if form.validate_on_submit():
+        nome = form.nome.data
+        email = form.email.data
+        senha = md5((form.senha.data).encode())
+        conf_senha = md5((form.conf_senha.data).encode())
+        endereco = form.endereco.data
+        cpf = form.cpf.data
+        data_nasc = form.data_nasc.data
         
         if senha.hexdigest() == conf_senha.hexdigest():
             novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
@@ -81,9 +82,7 @@ def cadastro_usuario(usuario):
 
     if usuario_foi_cadastrado:
         flash(u'Usuário cadastrado com sucesso!', 'success') 
-        
-        if usuario.cargo == "cliente":
-            login_user(usuario)
+        login_user(usuario)
 
         if Email.send_verificacao_email(usuario.email):
             flash(u'Email de verificação enviado com sucesso!', 'success') 
@@ -98,31 +97,32 @@ def cadastro_usuario(usuario):
 
 @usuario_bp.route('/editar', methods=['GET', 'POST'])
 @login_required
-def editar():
-    id = current_user.id
-    cliente = Usuario.query.filter_by(id=id).first()
+def editar_usuario():
+    form = CadastroForm()
 
-    if cliente:
-        form_cliente = EditarForm()
-        form_cliente.nome.data = cliente.nome
-        form_cliente.email.data = cliente.email
-        form_cliente.senha.data = cliente.senha
-        form_cliente.endereco.data = cliente.endereco
-        form_cliente.cpf.data = cliente.cpf
-        form_cliente.data_nasc.data = cliente.data_nasc
+    form.nome.data = current_user.nome
+    form.email.data = current_user.email
+    form.endereco.data = current_user.endereco
+    form.cpf.data = current_user.cpf
+    form.data_nasc.data = current_user.data_nasc
 
-        if request.method == 'POST':
-            cliente = Usuario.query.filter_by(id=id).first()
-            cliente.nome = request.form['nome']
-            cliente.email = request.form['email']
-            cliente.senha = request.form['senha']
-            cliente.endereco = request.form['endereco']
-            cliente.cpf = request.form['cpf']
-            cliente.data_nasc = request.form['data_nasc']
+    if request.method == 'POST':
+        usuario = Usuario.query.get(current_user.id)
+        usuario.nome = request.form['nome']
+        usuario.email = request.form['email']
+        usuario.endereco = request.form['endereco']
+        usuario.cpf = request.form['cpf']
+        usuario.data_nasc = request.form['data_nasc']
+        senha = md5((request.form['senha']).encode())
+        conf_senha = md5((request.form['conf_senha']).encode())
 
-            cliente_foi_salvo = Usuario.salvar(cliente)
+        if senha.hexdigest() == conf_senha.hexdigest():
+            if senha.strip():
+                usuario.senha = senha
 
-            if cliente_foi_salvo:
+            usuario_foi_salvo = Usuario.salvar(usuario)
+
+            if usuario_foi_salvo:
                 flash(u'Usuario alterado com sucesso!', 'success')
 
                 return redirect('/produto')
@@ -130,9 +130,11 @@ def editar():
                 flash(
                     u'Ocorreu um problema ao tentar alterar informacoes, tente novamente!', 'danger')
 
-                return render_template('adicionarfuncionario.html', form=form_cliente, titulo='Editar')
+                return render_template('adicionarfuncionario.html', form=form, titulo='Editar')
+        else:
+            flash(u'Ocorreu um problema ao tentar alterar funcionário, as senhas não coincidem!', 'danger')
 
-        return render_template('adicionarfuncionario.html', form = form_cliente, titulo='Editar')
+    return render_template('adicionarfuncionario.html', form = form, titulo='Editar')
 
 @usuario_bp.route('/logout')
 @login_required

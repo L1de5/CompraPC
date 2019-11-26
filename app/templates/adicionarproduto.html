@@ -33,14 +33,7 @@
                 </button>
 
                 <div class="dropdown-menu">  
-                    {% if current_user.cargo == 'cliente' %}
-                        <a class="dropdown-item" href="/usuario/editar"> 
-                            Editar perfil 
-                        </a>
-                        <a class="dropdown-item" href="/carrinho"> 
-                            Carrinho de Compras 
-                        </a>
-                    {% elif current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}
+                    {% if current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}
                         <a class="dropdown-item" href="/produto/adicionar"> 
                             Adicionar Produtos 
                         </a>
@@ -50,6 +43,12 @@
                                 Cadastrar Funcionários
                             </a>
                         {% endif %}
+                    {% endif %}
+
+                    {% if current_user.email_verificado == 0 %}
+                        <a class="dropdown-item" href="/email/enviarverificacao"> 
+                            Verificar email
+                        </a>
                     {% endif %}
 
                     <div class="dropdown-divider"></div>
