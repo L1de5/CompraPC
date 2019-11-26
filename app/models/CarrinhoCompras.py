@@ -5,15 +5,13 @@ class CarrinhoCompras():
 
     def __init__(self):
         self._itens = []
-
-    def set_itens(self, itens):
-        self._itens = itens
     
     def get_itens(self):
         return self._itens
 
-    def limpar_carrinho(self):
+    def limpar(self):
         self._itens = []
+        self.set_carrinho_on_session()
 
     def remover_item(self, dict_item):
         indice_item = self.existe_item(dict_item)
