@@ -228,7 +228,7 @@ def excluir_conta_outro_user(id = False):
         else:
             flash(u'Erro ao excluir conta!', 'danger')
 
-        return redirect('/funcionario/listar')
+        return redirect('/usuario/funcionario/listar')
     else:
         flash(u'Você não tem permissão para excluir contas de terceiros!', 'danger')
     
