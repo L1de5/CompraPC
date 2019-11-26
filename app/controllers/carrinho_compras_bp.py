@@ -49,6 +49,7 @@ def excluir(id):
 
     return redirect('/produto')
 
+
 @carrinho_compras_bp.route('/comprar', methods=['GET', 'POST'])
 @login_required
 def comprar():
@@ -65,10 +66,11 @@ def comprar():
         item_venda.quantidade = item['quantidade']
         item_venda.produto_id = item['produto']['id']
         db.session.add(item_venda)
+        db.session.commit()
         venda.data = datetime.now()
         venda.comprador_id = current_user.id
         venda.item_venda_id = item_venda.id
         db.session.add(venda)
         db.session.commit()
     carrinho.limpar()
-    return render_template("/buscas/compra.html", valor = valor_total)
+    return render_template("/buscas/compra.html", valor=valor_total)
