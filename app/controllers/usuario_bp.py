@@ -103,7 +103,11 @@ def listar():
     if current_user.cargo == 'administrador':
         funcionarios = Usuario.query.filter_by(cargo='funcionario')
 
-    return render_template('buscas/funcionarios.html', funcionarios = funcionarios)
+        return render_template('buscas/funcionarios.html', funcionarios = funcionarios)
+    else:
+        flash(u'Você não tem permissão para acessar esta rota!', 'danger')
+
+        return redirect('/produto')
 
 @usuario_bp.route('/editar', methods=['GET', 'POST'])
 @login_required
@@ -200,7 +204,7 @@ def editar_funcionario(id = False):
     else:
         flash(u'Você não tem permissão para acessar esta rota!', 'danger')
 
-        return redirect('/funcionario/listar')
+        return redirect('/produto')
 
 @usuario_bp.route('/deletarconta')
 @login_required
@@ -219,7 +223,12 @@ def excluir_conta(id = False):
 @login_required
 def excluir_conta_outro_user(id = False):
     if id and current_user.cargo == 'administrador':
-        id_usuario = id
+        if Usuario.excluir(id):
+            flash(u'A conta foi excluida com sucesso!', 'success')
+        else:
+            flash(u'Erro ao excluir conta!', 'danger')
+
+        return redirect('/funcionario/listar')
     else:
         flash(u'Você não tem permissão para excluir contas de terceiros!', 'danger')
     
