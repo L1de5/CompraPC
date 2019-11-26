@@ -24,6 +24,22 @@ class CarrinhoCompras():
         self.set_carrinho_on_session()
         return True
 
+    def alterar_quantidade_item(self, indice_item, quantidade_nova):
+        if self._itens[indice_item]:
+            item = self._itens[indice_item]
+            quantidade_estoque = int(item['produto']['quantidade'])
+
+            if (quantidade_nova <= quantidade_estoque):
+                self._itens[indice_item]['quantidade'] = quantidade_nova
+            else:
+                return False
+        else:
+            return False
+        
+        self.set_carrinho_on_session()
+
+        return True
+
     def adicionar_item(self, dict_item):
         indice_item = self.existe_item(dict_item['produto'])
 

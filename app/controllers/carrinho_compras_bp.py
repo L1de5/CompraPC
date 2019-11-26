@@ -49,6 +49,16 @@ def excluir(id):
 
     return redirect('/produto')
 
+@carrinho_compras_bp.route('/alterarquantidade', methods = ['GET', 'POST'])
+@login_required
+def alterar_quantidade():
+    if request.method == 'POST':
+        indice_item = int(request.values.get('indice'))
+        quantidade_nova = int(request.values.get('quantidade_nova'))
+        carrinho.alterar_quantidade_item(indice_item, quantidade_nova)
+
+    return redirect('/')
+
 
 @carrinho_compras_bp.route('/comprar', methods=['GET', 'POST'])
 @login_required

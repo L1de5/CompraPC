@@ -94,7 +94,7 @@
                             <td class="overflow-text">{{ item['produto']['descricao'] }} </td>
                             <td> R$ {{ item['produto']['preco'] }}</td>
                             <td> 
-                                <input type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="{{ item['quantidade'] }}" min="1" max="{{ item['produto']['quantidade'] }}">
+                                <input data-index="{{item['produto']['id']}}" type="number" class="inpt-qnt" name="quantidade" id="quantidade" value="{{ item['quantidade'] }}" min="1" max="{{ item['produto']['quantidade'] }}">
                             </td>
                             <td>
                                 <a href="/carrinho/excluiritem/{{ item['produto']['id'] }}" class="btn btn-outline-dark btn-icon"> 
@@ -137,4 +137,8 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script>
 {% endblock %}
