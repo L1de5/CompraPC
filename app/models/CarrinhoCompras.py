@@ -36,7 +36,11 @@ class CarrinhoCompras():
             else:
                 return False
         else:
-            self._itens.append(dict_item)
+            quantidade_estoque = int(dict_item['produto']['quantidade'])
+            quantidade_compra = int(dict_item['quantidade'])
+
+            if (quantidade_compra <= quantidade_estoque):
+                self._itens.append(dict_item)
         
         self.set_carrinho_on_session()
 

@@ -9,6 +9,6 @@ class Venda(db.Model):
     __tablename__ = 'venda'
 
     id = db.Column(db.Integer, primary_key = True)
-    data = db.Column(db.DateTime, nullable = False)
+    data = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     comprador_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     item_venda_id = db.Column(db.Integer, db.ForeignKey('item_venda.id'))
