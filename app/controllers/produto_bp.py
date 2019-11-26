@@ -4,6 +4,7 @@ from flask import *
 from app.models.form.cadastro_usuario import CadastroForm
 from app.models.form.login_usuario import LoginForm
 from app.models.form.produtos import ProdutoForm
+from app.models.form.editar_produto import EditarProdutoForm
 from app.models.banco.Produto import Produto
 from flask_login import login_required, current_user
 
@@ -53,7 +54,7 @@ def editar(id):
     produto = Produto.query.filter_by(id = id).first()
 
     if produto:
-        form_produto = ProdutoForm()
+        form_produto = EditarProdutoForm()
         form_produto.nome.data = produto.nome
         form_produto.descricao.data = produto.descricao
         form_produto.preco.data = produto.preco

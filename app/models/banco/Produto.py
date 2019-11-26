@@ -44,7 +44,6 @@ class Produto(db.Model):
             if produto.id:
                 db.session.merge(produto)
 
-                flash(u'Produto alterado com sucesso!', 'success')
             else:
                 db.session.add(produto)
 

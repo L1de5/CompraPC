@@ -47,6 +47,7 @@ def cadastro():
             novo_usuario = Usuario(nome = nome, email = email, senha = senha.hexdigest(), endereco = endereco, cpf = cpf, data_nasc = data_nasc)
             
             cadastro_usuario(novo_usuario)
+            login_user(novo_usuario)
         else:
             flash(u'Ocorreu um problema ao tentar cadastrar usuário, as senhas não coincidem!', 'danger')
 
@@ -82,7 +83,6 @@ def cadastro_usuario(usuario):
 
     if usuario_foi_cadastrado:
         flash(u'Usuário cadastrado com sucesso!', 'success') 
-        login_user(usuario)
 
         if Email.send_verificacao_email(usuario.email):
             flash(u'Email de verificação enviado com sucesso!', 'success') 
@@ -93,7 +93,6 @@ def cadastro_usuario(usuario):
         flash(u'Ocorreu um problema ao tentar cadastrar usuário, tente novamente!', 'danger')
 
     return redirect('/produto')
-
 
 @usuario_bp.route('/editar', methods=['GET', 'POST'])
 @login_required
