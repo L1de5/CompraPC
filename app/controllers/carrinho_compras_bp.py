@@ -4,7 +4,11 @@ from app import app
 from flask import *
 from app.models.banco.Produto import Produto
 from app.models.CarrinhoCompras import CarrinhoCompras
+from app.models.banco.Venda import Venda
+from app.models.banco.ItemVenda import ItemVenda
 from flask_login import login_required, current_user
+from datetime import datetime
+from app.ext.database import db
 
 carrinho_compras_bp = Blueprint('carrinho', __name__, url_prefix='/carrinho')
 carrinho = CarrinhoCompras()
@@ -46,3 +50,26 @@ def excluir(id):
     return redirect('/produto')
 
 
+@carrinho_compras_bp.route('/comprar', methods=['GET', 'POST'])
+@login_required
+def comprar():
+    valor_total = carrinho.get_valor_total()
+    item = carrinho.get_itens()
+    venda = Venda()
+    item_venda = ItemVenda()
+    for item in item:
+        produto = Produto.query.get(item['produto']['id'])
+        produto.quantidade = produto.quantidade - item['quantidade']
+        Produto.editar(produto)
+        item_venda.data = datetime.now()
+        item_venda.preco = item['produto']['preco']
+        item_venda.quantidade = item['quantidade']
+        item_venda.produto_id = item['produto']['id']
+        #venda.data = datetime.now()
+        #venda.comprador_id = current_user.id
+        #venda.item_venda_id = item_venda.id
+        #db.session.add(venda)
+        db.session.add(item_venda)
+        db.session.commit()
+    #queria limpar o carrinho, mas n'ao consegui, se limpar, nem vai precisar verificar antes de comprar se ainda tem o item no estoquecarrinho.__init__()
+    return render_template("/buscas/compra.html", valor = valor_total)

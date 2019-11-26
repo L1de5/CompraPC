@@ -38,7 +38,19 @@ class Produto(db.Model):
             return True
         except exc.SQLAlchemyError:
             return False
-        
+    @staticmethod
+    def editar(produto):
+        try:
+
+            if produto.id:
+                db.session.merge(produto)
+                
+            db.session.commit()
+
+            return True
+        except exc.SQLAlchemyError:
+            return False
+
     @staticmethod
     def excluir(produto):
         try:
