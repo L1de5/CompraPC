@@ -16,53 +16,44 @@
             <a class="navbar-brand" href="/"> CompraPC </a>
         </div>
 
-        <div>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                <button class="btn btn-outline-dark my-2 my-sm-0 btn-icon" type="submit"> 
-                    <i class="material-icons green-icon"> search </i> 
-                </button>
-            </form>
-        </div>
+        <div class="btn-group dropleft">
+            <button type="button" class="dropdown-toggle btn-icon btn btn-outline-dark my-2 my-sm-0 btn-ico" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons green-icon"> menu </i> 
+            </button>
 
-            <div class="btn-group dropleft">
-                <button type="button" class="dropdown-toggle btn-icon btn btn-outline-dark my-2 my-sm-0 btn-ico" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="material-icons green-icon"> menu </i> 
-                </button>
-
-                <div class="dropdown-menu">  
-                    {% if current_user.cargo == 'cliente' %}
-                        <a class="dropdown-item" href="/usuario/editar"> 
-                            Editar perfil 
-                        </a>
-                        <a class="dropdown-item" href="/carrinho"> 
-                            Carrinho de Compras 
-                        </a>
-                    {% elif current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}
-                        <a class="dropdown-item" href="/produto/adicionar"> 
-                            Adicionar Produtos 
-                        </a>
-
-                        {% if current_user.cargo == 'administrador'%}
-                            <a class="dropdown-item" href="/usuario/funcionario/cadastro">
-                                Cadastrar Funcionários
-                            </a>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if current_user.email_verificado == 0 %}
-                        <a class="dropdown-item" href="/email/enviarverificacao"> 
-                            Verificar email
-                        </a>
-                    {% endif %}
-
-                    <div class="dropdown-divider"></div>
-
-                    <a class="dropdown-item" href="/usuario/logout">
-                        Sair
+            <div class="dropdown-menu">  
+                {% if current_user.cargo == 'cliente' %}
+                    <a class="dropdown-item" href="/usuario/editar"> 
+                        Editar perfil 
                     </a>
-                </div>
+                    <a class="dropdown-item" href="/carrinho"> 
+                        Carrinho de Compras 
+                    </a>
+                {% elif current_user.cargo == 'administrador' or current_user.cargo == 'funcionario' %}
+                    <a class="dropdown-item" href="/produto/adicionar"> 
+                        Adicionar Produtos 
+                    </a>
+
+                    {% if current_user.cargo == 'administrador'%}
+                        <a class="dropdown-item" href="/usuario/funcionario/cadastro">
+                            Cadastrar Funcionários
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+                {% if current_user.email_verificado == 0 %}
+                    <a class="dropdown-item" href="/email/enviarverificacao"> 
+                        Verificar email
+                    </a>
+                {% endif %}
+
+                <div class="dropdown-divider"></div>
+
+                <a class="dropdown-item" href="/usuario/logout">
+                    Sair
+                </a>
             </div>
+        </div>
     </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %}

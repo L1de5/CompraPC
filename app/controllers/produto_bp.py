@@ -9,11 +9,17 @@ from flask_login import login_required, current_user
 
 produtos_bp = Blueprint('produtos', __name__, url_prefix='/produto')
 
-@produtos_bp.route('/')
+@produtos_bp.route('/', methods=['GET'])
 def listar():
     form_cadastro = CadastroForm()
     form_login = LoginForm()
-    produtos = Produto.query.order_by(Produto.id).all()
+
+    if request.method == 'GET':
+        palavra = request.args.get('palavra')
+
+        produtos = Produto.buscar(palavra)
+    else:
+        produtos = Produto.query.order_by(Produto.id).all()
 
     return render_template('buscas/produtos.html', produtos = produtos, form_cadastro = form_cadastro, form_login = form_login)
 

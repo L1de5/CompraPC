@@ -19,12 +19,27 @@ class Produto(db.Model):
     item_vendas = db.relationship('ItemVenda', backref='produto', lazy='select')
   
     @staticmethod
-    def salvar(produto, foto):
+    def buscar(palavra):
         try:
-            nome_foto = Foto.salvar(foto)
+            if palavra:
+                palavra = '%{}%'.format(palavra)
+                produtos = Produto.query.filter(Produto.nome.ilike(palavra)).order_by(Produto.id).all()
+            else:
+                produtos = Produto.query.order_by(Produto.id).all()
 
-            if nome_foto:
-                produto.arquivo = 'uploads/' + nome_foto
+            return produtos
+        except exc.SQLAlchemyError:
+            return False
+
+
+    @staticmethod
+    def salvar(produto, foto = None):
+        try:
+            if foto:
+                nome_foto = Foto.salvar(foto)
+
+                if nome_foto:
+                    produto.arquivo = 'uploads/' + nome_foto
 
             if produto.id:
                 db.session.merge(produto)
@@ -33,18 +48,6 @@ class Produto(db.Model):
             else:
                 db.session.add(produto)
 
-            db.session.commit()
-
-            return True
-        except exc.SQLAlchemyError:
-            return False
-    @staticmethod
-    def editar(produto):
-        try:
-
-            if produto.id:
-                db.session.merge(produto)
-                
             db.session.commit()
 
             return True
